@@ -17,7 +17,7 @@ namespace App\Publisher\Tapatalk;
 use App\Config\Configuration;
 use App\Config\PublisherConfiguration;
 use App\Publisher\Publisher;
-use App\Release\Release;
+use App\Packagist\Release;
 use App\Publisher\Tapatalk\Renderer\Renderer;
 use Netzmacht\Tapatalk\Client;
 

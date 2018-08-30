@@ -16,7 +16,7 @@ namespace App\Command;
 
 use App\Packagist\PackageReleases;
 use App\Publisher\Publisher;
-use App\Release\Release;
+use App\Packagist\Release;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

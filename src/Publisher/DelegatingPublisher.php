@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace App\Publisher;
 
-use App\Release\Release;
+use App\Packagist\Release;
 
 /**
  * Class DelegatingPublisher

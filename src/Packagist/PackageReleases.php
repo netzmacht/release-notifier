@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace App\Packagist;
 
 use App\Config\Configuration;
-use App\Release\Release;
+use App\Packagist\Release;
 use Zend\Feed\Reader\Http\ClientInterface;
 use Zend\Feed\Reader\Reader;
 

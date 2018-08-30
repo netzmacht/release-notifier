@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace App\Publisher\Tapatalk\Renderer;
 
-use App\Release\Release;
+use App\Packagist\Release;
 
 /**
  * Renderer renders the subject and body for a release.
