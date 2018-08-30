@@ -20,10 +20,10 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 
 (function () {
-    require_once __DIR__ . '/vendor/autoload.php';
+    require_once dirname(__DIR__) . '/vendor/autoload.php';
 
     // Load configuration and create package configuration.
-    $config        = require __DIR__ . '/config/config.php';
+    $config        = require dirname(__DIR__) . '/config/config.php';
     $configuration = Configuration::fromArray($config['packages']);
 
     // Create packagist package releases endpoint
