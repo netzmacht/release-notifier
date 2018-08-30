@@ -30,29 +30,31 @@ use Symfony\Component\Filesystem\Filesystem;
     $client   = new GuzzleClientAdapter(new HttpClient(['base_uri' => $config['packagist']['url']]));
     $releases = new PackageReleases($client, $configuration);
 
-    // Create tapatalk api client
-    $tapatalk = Factory::connect(
-        $config['tapatalk']['url'],
-        $config['tapatalk']['user'],
-        $config['tapatalk']['password']
-    );
-
-    // Create default release not renderer
-    $renderer = new CallableRenderer(
-        $config['tapatalk']['renderer']['subject'],
-        $config['tapatalk']['renderer']['body']
-    );
-
-    // Create publishers.
+    // Create publisher.
     if ($config['debug']) {
         $publisher = new NoOpPublisher();
     } else {
-        $publisher = new DelegatingPublisher(
-            [
-                new PostPublisher($tapatalk, $configuration, $renderer),
-                new TopicPublisher($tapatalk, $configuration, $renderer),
-            ]
-        );
+        $publishers = [];
+
+        if (isset($config['tapatalk'])) {
+            // Create tapatalk api client
+            $tapatalk = Factory::connect(
+                $config['tapatalk']['url'],
+                $config['tapatalk']['user'],
+                $config['tapatalk']['password']
+            );
+
+            // Create default release not renderer
+            $renderer = new CallableRenderer(
+                $config['tapatalk']['renderer']['subject'],
+                $config['tapatalk']['renderer']['body']
+            );
+
+            $publishers[] = new PostPublisher($tapatalk, $configuration, $renderer);
+            $publishers[] = new TopicPublisher($tapatalk, $configuration, $renderer);
+        }
+
+        $publisher = new DelegatingPublisher($publishers);
     }
 
     $fileSystem = new Filesystem();
