@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -14,19 +14,26 @@ declare(strict_types=1);
 
 namespace App\Packagist;
 
-use GuzzleHttp\Client;
 use App\Config\Configuration;
 use App\Release\Release;
 use Zend\Feed\Reader\Http\ClientInterface;
 use Zend\Feed\Reader\Reader;
 
+/**
+ * Class PackageReleases
+ */
 final class PackageReleases
 {
     /**
-     * @var Client
+     * Http client.
+     *
+     * @var ClientInterface
      */
     private $client;
+
     /**
+     * Packages configuration.
+     *
      * @var Configuration
      */
     private $configuration;
@@ -34,19 +41,21 @@ final class PackageReleases
     /**
      * PackageReleases constructor.
      *
-     * @param ClientInterface        $client
-     * @param Configuration $configuration
+     * @param ClientInterface $client        Http client.
+     * @param Configuration   $configuration Packages configuration.
      */
     public function __construct(ClientInterface $client, Configuration $configuration)
     {
-        $this->client = $client;
+        $this->client        = $client;
         $this->configuration = $configuration;
 
         Reader::setHttpClient($client);
     }
 
     /**
-     * @param \DateTimeInterface $dateTime
+     * Get packages since a defined time.
+     *
+     * @param \DateTimeInterface $dateTime The date since when the packages should be collected.
      *
      * @return Release[]|iterable
      */

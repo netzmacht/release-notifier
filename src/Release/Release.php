@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -16,35 +16,49 @@ namespace App\Release;
 
 /**
  * Class Release
- *
- * @package App\Release
  */
 final class Release
 {
     /**
+     * Vendor name.
+     *
      * @var string
      */
     private $vendor;
 
     /**
+     * Package name.
+     *
      * @var string
      */
     private $package;
 
     /**
+     * Package version.
+     *
      * @var string
      */
     private $version;
 
     /**
+     * Package link.
+     *
      * @var string
      */
     private $link;
 
     /**
-     * @param string $release
+     * Release constructor.
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * Create from string and link.
      *
-     * @param string $link
+     * @param string $release The release as string.
+     * @param string $link    The link.
      *
      * @return Release
      */
@@ -81,6 +95,11 @@ final class Release
         return $this->package;
     }
 
+    /**
+     * Get the full name of the package with vendor.
+     *
+     * @return string
+     */
     public function name(): string
     {
         return $this->vendor . '/' . $this->package;
@@ -107,7 +126,7 @@ final class Release
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function __toString(): string
     {

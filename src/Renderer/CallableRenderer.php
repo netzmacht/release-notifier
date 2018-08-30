@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -24,11 +24,15 @@ use App\Release\Release;
 final class CallableRenderer implements Renderer
 {
     /**
+     * Subject renderer.
+     *
      * @var callable
      */
     private $subjectRenderer;
 
     /**
+     * Body callable.
+     *
      * @var callable
      */
     private $bodyRenderer;
@@ -36,8 +40,8 @@ final class CallableRenderer implements Renderer
     /**
      * CallableRenderer constructor.
      *
-     * @param callable $subjectRenderer
-     * @param callable $bodyRenderer
+     * @param callable $subjectRenderer Subject renderer.
+     * @param callable $bodyRenderer    Body callable.
      */
     public function __construct(callable $subjectRenderer, callable $bodyRenderer)
     {
@@ -46,9 +50,7 @@ final class CallableRenderer implements Renderer
     }
 
     /**
-     * @param Release $release
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function renderSubject(Release $release): string
     {
@@ -56,9 +58,7 @@ final class CallableRenderer implements Renderer
     }
 
     /**
-     * @param Release $release
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function renderBody(Release $release): string
     {

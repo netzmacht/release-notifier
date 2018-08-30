@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -25,12 +25,16 @@ use Zend\Feed\Reader\Http\Psr7ResponseDecorator;
 final class GuzzleClientAdapter implements FeedReaderHttpClientInterface
 {
     /**
+     * The guzzle client.
+     *
      * @var GuzzleClientInterface
      */
     private $client;
 
     /**
-     * @param GuzzleClientInterface|null $client
+     * Construct.
+     *
+     * @param GuzzleClientInterface $client The guzzle client.
      */
     public function __construct(GuzzleClientInterface $client)
     {
@@ -42,8 +46,6 @@ final class GuzzleClientAdapter implements FeedReaderHttpClientInterface
      */
     public function get($uri)
     {
-        return new Psr7ResponseDecorator(
-            $this->client->request('GET', $uri)
-        );
+        return new Psr7ResponseDecorator($this->client->request('GET', $uri));
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -45,6 +45,8 @@ abstract class AbstractPublisher implements Publisher
     private $configuration;
 
     /**
+     * Release renderer.
+     *
      * @var Renderer
      */
     private $renderer;
@@ -52,9 +54,9 @@ abstract class AbstractPublisher implements Publisher
     /**
      * PostPublisher constructor.
      *
-     * @param Client        $tapatalk
-     * @param Configuration $configuration
-     * @param               $renderer
+     * @param Client        $tapatalk      The tapatalk api client.
+     * @param Configuration $configuration The package configuration.
+     * @param Renderer      $renderer      The renderer.
      */
     public function __construct(Client $tapatalk, Configuration $configuration, Renderer $renderer)
     {
@@ -64,9 +66,7 @@ abstract class AbstractPublisher implements Publisher
     }
 
     /**
-     * @param Release $release
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function supports(Release $release): bool
     {
@@ -81,7 +81,9 @@ abstract class AbstractPublisher implements Publisher
     }
 
     /**
-     * @param Release $release
+     * {@inheritdoc}
+     *
+     * @throws \RuntimeException If invalid configuration is loaded.
      */
     public function publish(Release $release): void
     {
@@ -102,17 +104,19 @@ abstract class AbstractPublisher implements Publisher
     }
 
     /**
-     * @param Client                 $client
-     * @param PublisherConfiguration $configuration
-     * @param string                 $renderSubject
-     * @param string                 $renderBody
+     * Create an entry.
+     *
+     * @param Client                 $client        The tapatalk api client.
+     * @param PublisherConfiguration $configuration The publisher configuration.
+     * @param string                 $subject       The rendered subject.
+     * @param string                 $body          The rendered body.
      *
      * @return void
      */
     abstract protected function createEntry(
         Client $client,
         PublisherConfiguration $configuration,
-        string $renderSubject,
-        string $renderBody
+        string $subject,
+        string $body
     ): void;
 }

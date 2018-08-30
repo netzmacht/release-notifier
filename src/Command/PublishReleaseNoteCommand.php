@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -29,16 +29,22 @@ use Symfony\Component\Filesystem\Filesystem;
 final class PublishReleaseNoteCommand extends Command
 {
     /**
+     * The publisher.
+     *
      * @var Publisher
      */
     private $publisher;
 
     /**
+     * The file system.
+     *
      * @var Filesystem
      */
     private $filesystem;
 
     /**
+     * Package releases.
+     *
      * @var PackageReleases
      */
     private $packageReleases;
@@ -46,7 +52,9 @@ final class PublishReleaseNoteCommand extends Command
     /**
      * PublishReleaseNoteCommand constructor.
      *
-     * @param Publisher $publisher
+     * @param Publisher       $publisher       The publisher.
+     * @param Filesystem      $filesystem      Filesystem.
+     * @param PackageReleases $packageReleases Package releases.
      */
     public function __construct(Publisher $publisher, Filesystem $filesystem, PackageReleases $packageReleases)
     {
@@ -75,8 +83,8 @@ final class PublishReleaseNoteCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $since   = $this->getSince($input);
-        $count   = 0;
+        $since = $this->getSince($input);
+        $count = 0;
 
         foreach ($this->packageReleases->since($since) as $release) {
             $this->publisher->publish($release);
@@ -89,10 +97,11 @@ final class PublishReleaseNoteCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
+     * Get the sinc date.
+     *
+     * @param InputInterface $input The console input.
      *
      * @return \DateTimeInterface
-     * @throws \Exception
      */
     private function getSince(InputInterface $input): \DateTimeInterface
     {
@@ -106,11 +115,27 @@ final class PublishReleaseNoteCommand extends Command
         return $dateTime;
     }
 
+    /**
+     * Log the release published note.
+     *
+     * @param OutputInterface $output  The console output.
+     * @param Release         $release The release.
+     *
+     * @return void
+     */
     private function logReleasedPublished(OutputInterface $output, Release $release): void
     {
         $output->writeln(sprintf('Release "%s" published', $release), OutputInterface::VERBOSITY_VERBOSE);
     }
 
+    /**
+     * Log the release published note.
+     *
+     * @param OutputInterface $output The console output.
+     * @param int             $count  The number of releases.
+     *
+     * @return void
+     */
     private function logSummary(OutputInterface $output, int $count): void
     {
         if ($count) {

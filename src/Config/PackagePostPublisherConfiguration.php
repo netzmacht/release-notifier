@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -14,25 +14,29 @@ declare(strict_types=1);
 
 namespace App\Config;
 
+use App\Renderer\Renderer;
+
 /**
  * Class PackagePostPublisherConfiguration
  */
 final class PackagePostPublisherConfiguration extends AbstractPublisherConfiguration
 {
     /**
+     * The topic id.
+     *
      * @var int
      */
     private $topicId;
 
     /**
-     * PackageTopicPublisherConfiguration constructor.
+     * AbstractPackagePublisherConfiguration constructor.
      *
-     * @param string        $packageName
-     * @param int           $forumId
-     * @param int           $topicId
-     * @param callable|null $renderer
+     * @param string        $packageName The package name.
+     * @param int           $forumId     The forum id.
+     * @param int           $topicId     The topic id.
+     * @param Renderer|null $renderer    A custom renderer.
      */
-    public function __construct(string $packageName, int $forumId, int $topicId, ?callable $renderer)
+    public function __construct(string $packageName, int $forumId, int $topicId, ?Renderer $renderer = null)
     {
         parent::__construct($packageName, $forumId, $renderer);
 
@@ -40,7 +44,9 @@ final class PackagePostPublisherConfiguration extends AbstractPublisherConfigura
     }
 
     /**
-     * @param array $config
+     * Create configuration from array.
+     *
+     * @param array $config The config array.
      *
      * @return AbstractPublisherConfiguration
      */

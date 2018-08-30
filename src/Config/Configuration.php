@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -20,14 +20,20 @@ namespace App\Config;
 final class Configuration
 {
     /**
+     * Configuration packages.
+     *
      * @var PublisherConfiguration[]
      */
     private $packages = [];
 
     /**
-     * @param array $config
+     * Create packages configuration from array.
+     *
+     * @param array $config The config array.
      *
      * @return Configuration
+     *
+     * @throws \RuntimeException If publisher is not supported.
      */
     public static function fromArray(array $config): self
     {
@@ -37,11 +43,11 @@ final class Configuration
         foreach ($config as $package) {
             switch ($package['publisher']) {
                 case 'post':
-                    $packages[] = PackagePostPublisherConfiguration::fromArray($package);
+                    $packages[$package['package']] = PackagePostPublisherConfiguration::fromArray($package);
                     break;
 
                 case 'topic':
-                    $packages[] = TopicPublisherConfiguration::fromArray($package);
+                    $packages[$package['package']] = TopicPublisherConfiguration::fromArray($package);
                     break;
 
                 default:
@@ -72,6 +78,8 @@ final class Configuration
      * @param string $packageName Package name.
      *
      * @return PublisherConfiguration
+     *
+     * @throws \InvalidArgumentException If unknown package name is given.
      */
     public function package(string $packageName): PublisherConfiguration
     {
@@ -83,6 +91,8 @@ final class Configuration
     }
 
     /**
+     * Get all packages.
+     *
      * @return PublisherConfiguration[]|iterable
      */
     public function packages(): iterable
