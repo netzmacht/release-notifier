@@ -38,7 +38,10 @@ use Symfony\Component\Filesystem\Filesystem;
     );
 
     // Create default release not renderer
-    $renderer = new CallableRenderer($config['renderer']['subject'], $config['renderer']['body']);
+    $renderer = new CallableRenderer(
+        $config['tapatalk']['renderer']['subject'],
+        $config['tapatalk']['renderer']['body']
+    );
 
     // Create publishers.
     if ($config['debug']) {

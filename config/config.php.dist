@@ -28,6 +28,19 @@ return [
         'url'      => 'https://community.contao.org/de/mobiquo/mobiquo.php',
         'user'     => '',
         'password' => '',
+        'renderer' => [
+            'subject' => function (Release $release): string {
+                return sprintf('Package "%s" released', $release);
+            },
+            'body' => function (Release $release): string {
+                return sprintf(
+                    'Version "%s" of "%s" got released. More information at [url]%s[/url]',
+                    $release->version(),
+                    $release->name(),
+                    $release->link()
+                );
+            }
+        ]
     ],
 
     // List of packages. Supported publishers are "post" and "topic". For a topic, you don't have to define a topicId.
@@ -41,18 +54,4 @@ return [
             'renderer'  => null,
         ],
     ],
-    // Default renderer.
-    'renderer' => [
-        'subject' => function (Release $release): string {
-            return sprintf('Package "%s" released', $release);
-        },
-        'body' => function (Release $release): string {
-            return sprintf(
-                'Version "%s" of "%s" got released. More information at [url]%s[/url]',
-                $release->version(),
-                $release->name(),
-                $release->link()
-            );
-        }
-    ]
 ];
