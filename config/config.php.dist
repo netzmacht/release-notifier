@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * packagist-release-publisher.
+ *
+ * @package    packagist-release-publisher
+ * @author     David Molineus <david.molineus@netzmacht.de>
+ * @copyright  2018 netzmacht David Molineus
+ * @license    LGPL-3.0-or-later
+ * @filesource
+ */
+
+declare(strict_types=1);
+
+use App\Release\Release;
+
+return [
+    // If set to true no packages are published, only the affected releases are displayed.
+    'debug' => false,
+
+    // Url to packagist. Only change if you have a custom packagist installation.
+    'packagist' => [
+        'url' => 'https://packagist.org',
+    ],
+
+    // Tapatalk endpoint, usually the board url with mobiquo/mobiquo.php suffix
+    'tapatalk'  => [
+        'url'      => 'https://community.contao.org/de/mobiquo/mobiquo.php',
+        'user'     => '',
+        'password' => '',
+    ],
+
+    // List of packages. Supported publishers are "post" and "topic". For a topic, you don't have to define a topicId.
+    // Custom renderer for each package are not supported right now but planned to be implemented.
+    'packages'  => [
+        [
+            'package'   => 'contao/contao',
+            'publisher' => 'post',
+            'forumId'   => 169,
+            'topicId'   => 68417,
+            'renderer'  => null,
+        ],
+    ],
+    // Default renderer.
+    'renderer' => [
+        'subject' => function (Release $release): string {
+            return sprintf('Package "%s" released', $release);
+        },
+        'body' => function (Release $release): string {
+            return sprintf(
+                'Version "%s" of "%s" got released. More information at [url]%s[/url]',
+                $release->version(),
+                $release->name(),
+                $release->link()
+            );
+        }
+    ]
+];

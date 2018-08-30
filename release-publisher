@@ -1,0 +1,64 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+use App\Publisher\Tapatalk\PostPublisher;
+use App\Publisher\Tapatalk\TopicPublisher;
+use App\Renderer\CallableRenderer;
+use GuzzleHttp\Client as HttpClient;
+use App\Command\PublishReleaseNoteCommand;
+use App\Config\Configuration;
+use App\Packagist\PackageReleases;
+use App\Publisher\DelegatingPublisher;
+use App\Publisher\NoOpPublisher;
+use App\Rss\Http\Client\GuzzleClientAdapter;
+use Netzmacht\Tapatalk\Factory;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Filesystem\Filesystem;
+
+(function () {
+    require_once __DIR__ . '/vendor/autoload.php';
+
+    // Load configuration and create package configuration.
+    $config        = require __DIR__ . '/config/config.php';
+    $configuration = Configuration::fromArray($config['packages']);
+
+    // Create packagist package releases endpoint
+    $client   = new GuzzleClientAdapter(new HttpClient(['base_uri' => $config['packagist']['url']]));
+    $releases = new PackageReleases($client, $configuration);
+
+    // Create tapatalk api client
+    $tapatalk = Factory::connect(
+        $config['tapatalk']['url'],
+        $config['tapatalk']['user'],
+        $config['tapatalk']['password']
+    );
+
+    // Create default release not renderer
+    $renderer = new CallableRenderer($config['renderer']['subject'], $config['renderer']['body']);
+
+    // Create publishers.
+    if ($config['debug']) {
+        $publisher = new NoOpPublisher();
+    } else {
+        $publisher = new DelegatingPublisher(
+            [
+                new PostPublisher($tapatalk, $configuration, $renderer),
+                new TopicPublisher($tapatalk, $configuration, $renderer),
+            ]
+        );
+    }
+
+    $fileSystem = new Filesystem();
+    $command    = new PublishReleaseNoteCommand($publisher, $fileSystem, $releases);
+
+    (new Application('packagist-release-publisher', '0.1.0'))
+        ->add($command)
+        ->getApplication()
+        ->setDefaultCommand($command->getName(), true)
+        ->run();
+})();
+
