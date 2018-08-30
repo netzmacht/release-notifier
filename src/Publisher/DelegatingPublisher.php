@@ -54,21 +54,13 @@ final class DelegatingPublisher implements Publisher
 
     /**
      * {@inheritdoc}
-     *
-     * @throws \RuntimeException When no supporting publisher is found.
      */
     public function publish(Release $release): void
     {
         foreach ($this->publisher as $publisher) {
             if ($publisher->supports($release)) {
                 $publisher->publish($release);
-
-                return;
             }
         }
-
-        throw new \RuntimeException(
-            sprintf('Publishing release "%s" failed. None supporting publisher found.', $release)
-        );
     }
 }
