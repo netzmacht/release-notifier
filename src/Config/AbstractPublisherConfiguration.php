@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace App\Config;
 
-use App\Renderer\Renderer;
+use App\Publisher\Tapatalk\Renderer\Renderer;
 
 /**
  * Class AbstractPublisherConfiguration

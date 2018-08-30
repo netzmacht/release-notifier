@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace App\Renderer;
+namespace App\Publisher\Tapatalk\Renderer;
 
 use App\Release\Release;
 

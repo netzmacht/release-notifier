@@ -7,7 +7,7 @@ namespace App;
 
 use App\Publisher\Tapatalk\PostPublisher;
 use App\Publisher\Tapatalk\TopicPublisher;
-use App\Renderer\CallableRenderer;
+use App\Publisher\Tapatalk\Renderer\CallableRenderer;
 use GuzzleHttp\Client as HttpClient;
 use App\Command\PublishReleaseNoteCommand;
 use App\Config\Configuration;
