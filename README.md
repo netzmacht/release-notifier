@@ -26,6 +26,15 @@ values are any string which can be parsed by `DateTime`.
 
 ```bash
 
-php bin/release-publisher -since="3 days ago" -v
+php bin/release-publisher --since="3 days ago" -v
+
+```
+
+By default the tool stores the time when it's run the last time. You can define a custom option by ignore the last run
+time.
+
+```bash
+
+php bin/release-publisher --ignore-last-run -v
 
 ```

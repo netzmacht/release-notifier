@@ -57,8 +57,9 @@ use Symfony\Component\Filesystem\Filesystem;
         $publisher = new DelegatingPublisher($publishers);
     }
 
-    $fileSystem = new Filesystem();
-    $command    = new PublishReleaseNoteCommand($publisher, $fileSystem, $releases);
+    $lastRunFile = dirname(__DIR__) . '/data/lastrun.txt';
+    $fileSystem  = new Filesystem();
+    $command     = new PublishReleaseNoteCommand($publisher, $fileSystem, $releases, $lastRunFile);
 
     (new Application('packagist-release-publisher', '0.1.0'))
         ->add($command)

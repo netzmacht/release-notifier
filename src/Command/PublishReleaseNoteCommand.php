@@ -50,19 +50,32 @@ final class PublishReleaseNoteCommand extends Command
     private $packageReleases;
 
     /**
+     * File storing since date.
+     *
+     * @var string
+     */
+    private $lastRunFile;
+
+    /**
      * PublishReleaseNoteCommand constructor.
      *
      * @param Publisher       $publisher       The publisher.
      * @param Filesystem      $filesystem      Filesystem.
      * @param PackageReleases $packageReleases Package releases.
+     * @param string          $lastRunFile     File storing since date.
      */
-    public function __construct(Publisher $publisher, Filesystem $filesystem, PackageReleases $packageReleases)
-    {
+    public function __construct(
+        Publisher $publisher,
+        Filesystem $filesystem,
+        PackageReleases $packageReleases,
+        string $lastRunFile
+    ) {
         parent::__construct('publish-release-note');
 
         $this->publisher       = $publisher;
         $this->filesystem      = $filesystem;
         $this->packageReleases = $packageReleases;
+        $this->lastRunFile     = $lastRunFile;
     }
 
     /**
@@ -73,8 +86,15 @@ final class PublishReleaseNoteCommand extends Command
         $this->addOption(
             'since',
             's',
-            InputOption::VALUE_OPTIONAL,
+            InputOption::VALUE_REQUIRED,
             'Optional time reference, parseable by \DateTimeImmutable'
+        );
+
+        $this->addOption(
+            'ignore-last-run',
+            'i',
+            InputOption::VALUE_NONE,
+            'If true the last run is ignored.'
         );
     }
 
@@ -86,6 +106,8 @@ final class PublishReleaseNoteCommand extends Command
         $since = $this->getSince($input);
         $count = 0;
 
+        $output->writeln(sprintf('Check packages released since %s:', $since->format($since::ATOM)));
+
         foreach ($this->packageReleases->since($since) as $release) {
             $this->publisher->publish($release);
             $count++;
@@ -94,6 +116,8 @@ final class PublishReleaseNoteCommand extends Command
         }
 
         $this->logSummary($output, $count);
+
+        $this->updateLastRun($since, $input->getOption('ignore-last-run'));
     }
 
     /**
@@ -105,8 +129,25 @@ final class PublishReleaseNoteCommand extends Command
      */
     private function getSince(InputInterface $input): \DateTimeInterface
     {
+        $lastRun = null;
+
+        if (!$input->getOption('ignore-last-run') && $this->filesystem->exists($this->lastRunFile)) {
+            $content = file_get_contents($this->lastRunFile);
+            $lastRun = new \DateTimeImmutable($content);
+        }
+
         if ($input->getOption('since')) {
-            return new \DateTimeImmutable($input->getOption('since'));
+            $since = new \DateTimeImmutable($input->getOption('since'));
+
+            if ($since > $lastRun) {
+                return $since;
+            }
+
+            return $lastRun;
+        }
+
+        if ($lastRun) {
+            return $lastRun;
         }
 
         $dateTime = new \DateTimeImmutable();
@@ -125,7 +166,7 @@ final class PublishReleaseNoteCommand extends Command
      */
     private function logReleasedPublished(OutputInterface $output, Release $release): void
     {
-        $output->writeln(sprintf('Release "%s" published', $release), OutputInterface::VERBOSITY_VERBOSE);
+        $output->writeln(sprintf(' - Release "%s" published', $release), OutputInterface::VERBOSITY_VERBOSE);
     }
 
     /**
@@ -143,5 +184,22 @@ final class PublishReleaseNoteCommand extends Command
         } else {
             $output->writeln(sprintf('No releases found.', $count), OutputInterface::VERBOSITY_VERBOSE);
         }
+    }
+
+    /**
+     * Update the last run information.
+     *
+     * @param \DateTimeInterface $lastRun The last run.
+     * @param bool               $ignore  If true the last run is ignored.
+     *
+     * @return void
+     */
+    private function updateLastRun(\DateTimeInterface $lastRun, bool $ignore): void
+    {
+        if ($ignore) {
+            return;
+        }
+
+        $this->filesystem->dumpFile($this->lastRunFile, $lastRun->format($lastRun::ATOM));
     }
 }
