@@ -117,7 +117,7 @@ final class PublishReleaseNoteCommand extends Command
 
         $this->logSummary($output, $count);
 
-        $this->updateLastRun($since, $input->getOption('ignore-last-run'));
+        $this->updateLastRun($input->getOption('ignore-last-run'));
     }
 
     /**
@@ -189,17 +189,16 @@ final class PublishReleaseNoteCommand extends Command
     /**
      * Update the last run information.
      *
-     * @param \DateTimeInterface $lastRun The last run.
-     * @param bool               $ignore  If true the last run is ignored.
+     * @param bool $ignore If true the last run is ignored.
      *
      * @return void
      */
-    private function updateLastRun(\DateTimeInterface $lastRun, bool $ignore): void
+    private function updateLastRun(bool $ignore): void
     {
         if ($ignore) {
             return;
         }
 
-        $this->filesystem->dumpFile($this->lastRunFile, $lastRun->format($lastRun::ATOM));
+        $this->filesystem->dumpFile($this->lastRunFile, date(\DateTimeInterface::ATOM));
     }
 }
