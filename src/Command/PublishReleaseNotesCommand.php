@@ -26,7 +26,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Class PublishReleaseNoteCommand
  */
-final class PublishReleaseNoteCommand extends Command
+final class PublishReleaseNotesCommand extends Command
 {
     /**
      * The publisher.
@@ -70,7 +70,7 @@ final class PublishReleaseNoteCommand extends Command
         PackageReleases $packageReleases,
         string $lastRunFile
     ) {
-        parent::__construct('publish-release-note');
+        parent::__construct('publish-notes');
 
         $this->publisher       = $publisher;
         $this->filesystem      = $filesystem;

@@ -5,16 +5,17 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Command\ListReleasesCommand;
+use App\Command\PublishReleaseNotesCommand;
+use App\Config\Configuration;
+use App\Publisher\DelegatingPublisher;
+use App\Publisher\NoOpPublisher;
+use App\Packagist\PackageReleases;
 use App\Publisher\Tapatalk\PostPublisher;
 use App\Publisher\Tapatalk\TopicPublisher;
 use App\Publisher\Tapatalk\Renderer\CallableRenderer;
-use GuzzleHttp\Client as HttpClient;
-use App\Command\PublishReleaseNoteCommand;
-use App\Config\Configuration;
-use App\Packagist\PackageReleases;
-use App\Publisher\DelegatingPublisher;
-use App\Publisher\NoOpPublisher;
 use App\Rss\Http\Client\GuzzleClientAdapter;
+use GuzzleHttp\Client as HttpClient;
 use Netzmacht\Tapatalk\Factory;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
@@ -59,12 +60,13 @@ use Symfony\Component\Filesystem\Filesystem;
 
     $lastRunFile = dirname(__DIR__) . '/data/lastrun.txt';
     $fileSystem  = new Filesystem();
-    $command     = new PublishReleaseNoteCommand($publisher, $fileSystem, $releases, $lastRunFile);
+
+    $listReleasesCommand        = new ListReleasesCommand($releases, $fileSystem, $lastRunFile);
+    $publishReleaseNotesCommand = new PublishReleaseNotesCommand($publisher, $fileSystem, $releases, $lastRunFile);
 
     (new Application('packagist-release-publisher', '0.1.0'))
-        ->add($command)
-        ->getApplication()
-        ->setDefaultCommand($command->getName(), true)
+        ->add($publishReleaseNotesCommand)->getApplication()
+        ->add($listReleasesCommand)->getApplication()
         ->run();
 })();
 
