@@ -35,6 +35,6 @@ final class PostPublisher extends AbstractPublisher
         string $body
     ): void {
         /** @var PackagePostPublisherConfiguration $configuration */
-        $client->posts()->replyTo($configuration->forumId(), $configuration->topicId(), $subject, $body);
+        $client->posts()->replyTo($configuration->forumId(), $configuration->topicId(), $body, $subject ?: null);
     }
 }
