@@ -4,13 +4,12 @@
     "type": "project",
     "require": {
         "php": "~7.1",
-        "symfony/console": "^4.1",
-        "zendframework/zend-feed": "^2.10",
         "guzzlehttp/psr7": "^1.4",
         "guzzlehttp/guzzle": "^6.3",
         "netzmacht/tapatalk-client-api": "^0.2.0",
-        "composer/semver": "^1.4",
-        "symfony/filesystem": "^4.1"
+        "symfony/console": "^4.1",
+        "symfony/filesystem": "^4.1",
+        "zendframework/zend-feed": "^2.10"
     },
     "license": "LGPL-3.0-or-later",
     "authors": [
