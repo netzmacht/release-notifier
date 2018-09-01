@@ -36,7 +36,7 @@ final class Release
     /**
      * Package version.
      *
-     * @var string
+     * @var Version
      */
     private $version;
 
@@ -69,7 +69,7 @@ final class Release
 
         $release->vendor  = $matches[1];
         $release->package = $matches[2];
-        $release->version = $matches[3];
+        $release->version = Version::fromString($matches[3]);
         $release->link    = $link;
 
         return $release;
@@ -108,9 +108,9 @@ final class Release
     /**
      * Get version.
      *
-     * @return string
+     * @return Version
      */
-    public function version(): string
+    public function version(): Version
     {
         return $this->version;
     }
