@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Packagist\PackageReleases;
-use App\Packagist\Release;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -97,6 +96,7 @@ final class ListReleasesCommand extends Command
 
         foreach ($this->packageReleases->since($since) as $release) {
             $output->writeln(sprintf(' - "%s" released', $release), OutputInterface::VERBOSITY_VERBOSE);
+            $count++;
         }
 
         $output->writeln(sprintf('%s releases found.', $count), OutputInterface::VERBOSITY_NORMAL);
