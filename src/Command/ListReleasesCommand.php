@@ -93,7 +93,7 @@ final class ListReleasesCommand extends Command
         $since = $this->getSince($input);
         $count = 0;
 
-        $output->writeln(sprintf('Check packages released since %s:', $since->format($since::ATOM)));
+        $output->writeln(sprintf('Check packages released since %s:', $since->format(DATE_ATOM)));
 
         foreach ($this->packageReleases->since($since) as $release) {
             $output->writeln(sprintf(' - "%s" released', $release), OutputInterface::VERBOSITY_VERBOSE);

@@ -106,7 +106,7 @@ final class PublishReleaseNotesCommand extends Command
         $since = $this->getSince($input);
         $count = 0;
 
-        $output->writeln(sprintf('Check packages released since %s:', $since->format($since::ATOM)));
+        $output->writeln(sprintf('Check packages released since %s:', $since->format(DATE_ATOM)));
 
         foreach ($this->packageReleases->since($since) as $release) {
             $this->publisher->publish($release);
@@ -199,6 +199,6 @@ final class PublishReleaseNotesCommand extends Command
             return;
         }
 
-        $this->filesystem->dumpFile($this->lastRunFile, date(\DateTimeInterface::ATOM));
+        $this->filesystem->dumpFile($this->lastRunFile, date(DATE_ATOM));
     }
 }
