@@ -16,6 +16,8 @@ namespace App\Packagist;
 
 use App\Config\Configuration;
 use App\Packagist\Release;
+use Composer\Semver\Semver;
+use Zend\Feed\Reader\Feed\FeedInterface;
 use Zend\Feed\Reader\Http\ClientInterface;
 use Zend\Feed\Reader\Reader;
 
@@ -64,16 +66,51 @@ final class PackageReleases
         $releases = [];
 
         foreach ($this->configuration->packages() as $package) {
-            $channel = Reader::import(sprintf('feeds/package.%s.rss', $package->packageName()));
+            $channel     = Reader::import(sprintf('feeds/package.%s.rss', $package->packageName()));
+            $previousMap = $this->buildPreviousMap($channel);
 
             /** @var \Zend\Feed\Reader\Entry\Rss $item */
             foreach ($channel as $item) {
                 if ($item->getDateCreated() > $dateTime) {
-                    $releases[] = Release::fromStringAndLink($item->getId(), $item->getLink());
+                    $version    = explode(' ', $item->getId(), 2)[1];
+                    $releases[] = Release::fromStringAndLink(
+                        $item->getId(),
+                        $item->getLink(),
+                        $previousMap[$version]
+                    );
                 }
             }
         }
 
         return $releases;
+    }
+
+    /**
+     * Build a previous versions map.
+     *
+     * @param FeedInterface $channel The feed channel.
+     *
+     * @return array
+     */
+    private function buildPreviousMap(FeedInterface $channel): array
+    {
+        $map      = [];
+        $versions = [];
+
+        /** @var \Zend\Feed\Reader\Entry\Rss $item */
+        foreach ($channel as $item) {
+            $version       = explode(' ', $item->getId(), 2)[1];
+            $versions[]    = $version;
+            $map[$version] = null;
+        }
+
+        $versions = Semver::sort($versions);
+
+        $length = count($versions);
+        for ($index = 1; $index < $length; $index++) {
+            $map[$versions[$index]] = Version::fromString($versions[($index - 1)]);
+        }
+
+        return $map;
     }
 }

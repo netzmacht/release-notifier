@@ -48,6 +48,13 @@ final class Release
     private $link;
 
     /**
+     * Previous version.
+     *
+     * @var Version|null
+     */
+    private $previous;
+
+    /**
      * Release constructor.
      */
     private function __construct()
@@ -57,20 +64,22 @@ final class Release
     /**
      * Create from string and link.
      *
-     * @param string $release The release as string.
-     * @param string $link    The link.
+     * @param string       $release  The release as string.
+     * @param string       $link     The link.
+     * @param Version|null $previous Previous version.
      *
      * @return Release
      */
-    public static function fromStringAndLink(string $release, string $link): self
+    public static function fromStringAndLink(string $release, string $link, ?Version $previous = null): self
     {
         preg_match('#([^/]+)/([^/]+)\s(.*)#', $release, $matches);
         $release = new static();
 
-        $release->vendor  = $matches[1];
-        $release->package = $matches[2];
-        $release->version = Version::fromString($matches[3]);
-        $release->link    = $link;
+        $release->vendor   = $matches[1];
+        $release->package  = $matches[2];
+        $release->version  = Version::fromString($matches[3]);
+        $release->link     = $link;
+        $release->previous = $previous;
 
         return $release;
     }
@@ -123,6 +132,16 @@ final class Release
     public function link(): string
     {
         return $this->link;
+    }
+
+    /**
+     * Get previous version.
+     *
+     * @return Version|null
+     */
+    public function previous(): ?Version
+    {
+        return $this->previous;
     }
 
     /**
