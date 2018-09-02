@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace App\Publisher\Tapatalk;
 
-use App\Config\Configuration;
-use App\Config\PublisherConfiguration;
 use App\Publisher\Publisher;
 use App\Packagist\Release;
 use App\Publisher\Tapatalk\Renderer\Renderer;
@@ -23,12 +21,15 @@ use Netzmacht\Tapatalk\Client;
 
 /**
  * Class AbstractPublisher
- *
- * @package App\Publisher\Tapatalk
  */
 abstract class AbstractPublisher implements Publisher
 {
-    protected const CONFIGURATION_CLASS = PublisherConfiguration::class;
+    /**
+     * Name of the publisher. Used to match against packages.
+     *
+     * @var string
+     */
+    private $name;
 
     /**
      * Tapatalk client.
@@ -38,9 +39,9 @@ abstract class AbstractPublisher implements Publisher
     protected $client;
 
     /**
-     * Publishing configuration.
+     * Package configuration.
      *
-     * @var Configuration
+     * @var array
      */
     private $configuration;
 
@@ -52,17 +53,33 @@ abstract class AbstractPublisher implements Publisher
     private $renderer;
 
     /**
+     * Condition which checks if package should be published.
+     *
+     * @var callable|null
+     */
+    private $condition;
+
+    /**
      * PostPublisher constructor.
      *
-     * @param Client        $tapatalk      The tapatalk api client.
-     * @param Configuration $configuration The package configuration.
-     * @param Renderer      $renderer      The renderer.
+     * @param string        $name                 Name of the publisher. Used to match against packages.
+     * @param Client        $tapatalk             The tapatalk api client.
+     * @param Renderer      $renderer             The renderer.
+     * @param array         $packageConfiguration The package configuration.
+     * @param callable|null $condition            Condition which checks if package should be published.
      */
-    public function __construct(Client $tapatalk, Configuration $configuration, Renderer $renderer)
-    {
+    public function __construct(
+        string $name,
+        Client $tapatalk,
+        Renderer $renderer,
+        array $packageConfiguration,
+        ?callable $condition = null
+    ) {
+        $this->name          = $name;
         $this->client        = $tapatalk;
-        $this->configuration = $configuration;
+        $this->configuration = $packageConfiguration;
         $this->renderer      = $renderer;
+        $this->condition     = $condition;
     }
 
     /**
@@ -70,14 +87,24 @@ abstract class AbstractPublisher implements Publisher
      */
     public function supports(Release $release): bool
     {
-        if (!$this->configuration->has($release->name())) {
+        $found = false;
+
+        foreach ($this->configuration as $package) {
+            if ($package['package'] === $release->name()) {
+                $found = isset($package['publishers'][$this->name]);
+                break;
+            }
+        }
+
+        if (!$found) {
             return false;
         }
 
-        $configuration = $this->configuration->package($release->name());
-        $configClass   = static::CONFIGURATION_CLASS;
+        if ($this->condition) {
+            return ($this->condition)($release);
+        }
 
-        return $configuration instanceof $configClass;
+        return true;
     }
 
     /**
@@ -87,18 +114,23 @@ abstract class AbstractPublisher implements Publisher
      */
     public function publish(Release $release): void
     {
-        $configuration = $this->configuration->package($release->name());
-        $configClass   = static::CONFIGURATION_CLASS;
+        $configuration = null;
 
-        if (!$configuration instanceof $configClass) {
+        foreach ($this->configuration as $package) {
+            if ($package['package'] === $release->name() && isset($package['publishers'][$this->name])) {
+                $configuration = $package['publishers'][$this->name];
+                break;
+            }
+        }
+
+        if (!$configuration) {
             throw new \RuntimeException(
-                sprintf('%s required. "%s" given.', $configClass, get_class($configuration))
+                sprintf('Package %s is not configured for renderer "%s".', $release->name(), self::class)
             );
         }
 
-        $renderer = $configuration->renderer() ?: $this->renderer;
-        $subject  = $renderer->renderSubject($release);
-        $body     = $renderer->renderBody($release);
+        $subject = $this->renderer->renderSubject($release);
+        $body    = $this->renderer->renderBody($release);
 
         $this->createEntry($this->client, $configuration, $subject, $body);
     }
@@ -106,16 +138,16 @@ abstract class AbstractPublisher implements Publisher
     /**
      * Create an entry.
      *
-     * @param Client                 $client        The tapatalk api client.
-     * @param PublisherConfiguration $configuration The publisher configuration.
-     * @param string                 $subject       The rendered subject.
-     * @param string                 $body          The rendered body.
+     * @param Client $client        The tapatalk api client.
+     * @param array  $configuration The Package configuration.
+     * @param string $subject       The rendered subject.
+     * @param string $body          The rendered body.
      *
      * @return void
      */
     abstract protected function createEntry(
         Client $client,
-        PublisherConfiguration $configuration,
+        array $configuration,
         string $subject,
         string $body
     ): void;

@@ -70,7 +70,7 @@ final class Release
      *
      * @return Release
      */
-    public static function fromStringAndLink(string $release, string $link, ?Version $previous = null): self
+    public static function create(string $release, string $link, ?Version $previous = null): self
     {
         preg_match('#([^/]+)/([^/]+)\s(.*)#', $release, $matches);
         $release = new static();

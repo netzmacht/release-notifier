@@ -21,7 +21,7 @@ use App\Packagist\Release;
  *
  * @package App\Renderer
  */
-final class CallableRenderer implements Renderer
+final class CallbackRenderer implements Renderer
 {
     /**
      * Subject renderer.

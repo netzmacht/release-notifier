@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Packagist\PackageReleases;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Class PublishReleaseNoteCommand
  */
-final class ListReleasesCommand extends Command
+final class ListReleasesCommand extends AbstractCommand
 {
     /**
      * Package releases.
@@ -69,6 +69,20 @@ final class ListReleasesCommand extends Command
      */
     protected function configure()
     {
+        parent::configure();
+
+        $this->addArgument(
+            'config',
+            InputArgument::OPTIONAL,
+            'Path to the config.php file.'
+        );
+
+        $this->addArgument(
+            'package',
+            InputArgument::OPTIONAL,
+            'Check for a package.'
+        );
+
         $this->addOption(
             'since',
             's',
@@ -92,11 +106,28 @@ final class ListReleasesCommand extends Command
         $since = $this->getSince($input);
         $count = 0;
 
+        if ($input->getArgument('package')) {
+            $packages = ['package' => $input->getArgument('package')];
+        } elseif ($input->getArgument('config')) {
+            $config = $this->loadConfig($input);
+            $packages = array_map(
+                function ($package) {
+                    return $package['package'];
+                },
+                $config['packages']
+            );
+        } else {
+            $output->writeln('<error>You have to configure package or config</error>');
+            exit;
+        }
+
         $output->writeln(sprintf('Check packages released since %s:', $since->format(DATE_ATOM)));
 
-        foreach ($this->packageReleases->since($since) as $release) {
-            $output->writeln(sprintf(' - "%s" released', $release), OutputInterface::VERBOSITY_VERBOSE);
-            $count++;
+        foreach ($packages as $package) {
+            foreach ($this->packageReleases->since($package, $since) as $release) {
+                $output->writeln(sprintf(' - "%s" released', $release), OutputInterface::VERBOSITY_VERBOSE);
+                $count++;
+            }
         }
 
         $output->writeln(sprintf('%s releases found.', $count), OutputInterface::VERBOSITY_NORMAL);

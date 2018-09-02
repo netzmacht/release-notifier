@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+use App\Command\ListReleasesCommand;
+use App\Command\PublishReleaseNotesCommand;
+use App\Packagist\PackageReleases;
+use App\Publisher\PublisherFactory;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Filesystem\Filesystem;
+
+(function () {
+    $rootDir   = dirname(__DIR__);
+
+    require_once $rootDir . '/vendor/autoload.php';
+
+    $config    = require $rootDir . '/config/config.php';
+    $factories = require $rootDir . '/config/factories.php';
+
+    $releases         = $factories[PackageReleases::class]();
+    $publisherFactory = $factories[PublisherFactory::class]();
+    $fileSystem       = $factories[Filesystem::class]();
+
+    $listReleasesCommand        = new ListReleasesCommand($releases, $fileSystem, $config['lastRunFile']);
+    $publishReleaseNotesCommand = new PublishReleaseNotesCommand(
+        $publisherFactory,
+        $fileSystem,
+        $releases,
+        $config['lastRunFile']
+    );
+
+    (new Application('packagist-release-publisher', '0.2.0'))
+        ->add($publishReleaseNotesCommand)->getApplication()
+        ->add($listReleasesCommand)->getApplication()
+        ->run();
+})();
+

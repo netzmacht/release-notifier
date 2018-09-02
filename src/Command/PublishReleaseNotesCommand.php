@@ -15,9 +15,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Packagist\PackageReleases;
-use App\Publisher\Publisher;
 use App\Packagist\Release;
-use Symfony\Component\Console\Command\Command;
+use App\Publisher\Publisher;
+use App\Publisher\PublisherConfiguration;
+use App\Publisher\PublisherFactory;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,14 +28,14 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Class PublishReleaseNoteCommand
  */
-final class PublishReleaseNotesCommand extends Command
+final class PublishReleaseNotesCommand extends AbstractCommand
 {
     /**
-     * The publisher.
+     * Publisher factory.
      *
-     * @var Publisher
+     * @var PublisherFactory
      */
-    private $publisher;
+    private $publisherFactory;
 
     /**
      * The file system.
@@ -59,23 +61,23 @@ final class PublishReleaseNotesCommand extends Command
     /**
      * PublishReleaseNoteCommand constructor.
      *
-     * @param Publisher       $publisher       The publisher.
-     * @param Filesystem      $filesystem      Filesystem.
-     * @param PackageReleases $packageReleases Package releases.
-     * @param string          $lastRunFile     File storing since date.
+     * @param PublisherFactory $publisherFactory The publisher factory.
+     * @param Filesystem       $filesystem       Filesystem.
+     * @param PackageReleases  $packageReleases  Package releases.
+     * @param string           $lastRunFile      File storing since date.
      */
     public function __construct(
-        Publisher $publisher,
+        PublisherFactory $publisherFactory,
         Filesystem $filesystem,
         PackageReleases $packageReleases,
         string $lastRunFile
     ) {
         parent::__construct('publish-notes');
 
-        $this->publisher       = $publisher;
-        $this->filesystem      = $filesystem;
-        $this->packageReleases = $packageReleases;
-        $this->lastRunFile     = $lastRunFile;
+        $this->publisherFactory = $publisherFactory;
+        $this->filesystem       = $filesystem;
+        $this->packageReleases  = $packageReleases;
+        $this->lastRunFile      = $lastRunFile;
     }
 
     /**
@@ -83,6 +85,14 @@ final class PublishReleaseNotesCommand extends Command
      */
     protected function configure()
     {
+        parent::configure();
+
+        $this->addArgument(
+            'config',
+            InputArgument::REQUIRED,
+            'Path to the config.php file.'
+        );
+
         $this->addOption(
             'since',
             's',
@@ -103,13 +113,15 @@ final class PublishReleaseNotesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $since = $this->getSince($input);
-        $count = 0;
+        $since  = $this->getSince($input);
+        $count  = 0;
+        $config = $this->loadConfig($input);
+        $publisher = $this->createPublisher($config);
 
         $output->writeln(sprintf('Check packages released since %s:', $since->format(DATE_ATOM)));
 
-        foreach ($this->packageReleases->since($since) as $release) {
-            $this->publisher->publish($release);
+        foreach ($this->packageReleases->since($config['packages'], $since) as $release) {
+            $publisher->publish($release);
             $count++;
 
             $this->logReleasedPublished($output, $release);
@@ -154,6 +166,26 @@ final class PublishReleaseNotesCommand extends Command
         $dateTime = $dateTime->setTime(0, 0);
 
         return $dateTime;
+    }
+
+
+    /**
+     * @param array $config
+     *
+     * @return Publisher
+     */
+    private function createPublisher(array $config): Publisher
+    {
+        $publishers = [];
+
+        foreach ($config['publishers'] as $publisherConfig) {
+            $publishers[] = $this->publisherFactory->create(
+                PublisherConfiguration::fromArray($publisherConfig),
+                $config['packages']
+            );
+        }
+
+        return new DelegatingPublisher($publishers);
     }
 
     /**

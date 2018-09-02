@@ -26,5 +26,6 @@
     },
     "require-dev": {
         "phpcq/all-tasks": "^1.2"
-    }
+    },
+    "bin": ["bin/packagist-release-publisher"]
 }

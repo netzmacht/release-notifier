@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace App\Publisher\Tapatalk;
 
-use App\Config\PublisherConfiguration;
-use App\Config\TopicPublisherConfiguration;
 use Netzmacht\Tapatalk\Client;
 
 /**
@@ -23,17 +21,15 @@ use Netzmacht\Tapatalk\Client;
  */
 final class TopicPublisher extends AbstractPublisher
 {
-    protected const CONFIGURATION_CLASS = TopicPublisherConfiguration::class;
-
     /**
      * {@inheritdoc}
      */
     protected function createEntry(
         Client $client,
-        PublisherConfiguration $configuration,
+        array $configuration,
         string $subject,
         string $body
     ): void {
-        $client->topics()->createNewTopic($configuration->forumId(), $subject, $body);
+        $client->topics()->createNewTopic($configuration['forumId'], $subject, $body);
     }
 }

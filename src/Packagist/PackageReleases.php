@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace App\Packagist;
 
-use App\Config\Configuration;
-use App\Packagist\Release;
 use Composer\Semver\Semver;
 use Zend\Feed\Reader\Feed\FeedInterface;
 use Zend\Feed\Reader\Http\ClientInterface;
@@ -34,52 +32,44 @@ final class PackageReleases
     private $client;
 
     /**
-     * Packages configuration.
-     *
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * PackageReleases constructor.
      *
-     * @param ClientInterface $client        Http client.
-     * @param Configuration   $configuration Packages configuration.
+     * @param ClientInterface $client Http client.
      */
-    public function __construct(ClientInterface $client, Configuration $configuration)
+    public function __construct(ClientInterface $client)
     {
-        $this->client        = $client;
-        $this->configuration = $configuration;
-
-        Reader::setHttpClient($client);
+        $this->client = $client;
     }
 
     /**
      * Get packages since a defined time.
      *
+     * @param string             $package  The full package name, e.g. vendor/package.
      * @param \DateTimeInterface $dateTime The date since when the packages should be collected.
      *
-     * @return Release[]|iterable
+     * @return iterable
      */
-    public function since(\DateTimeInterface $dateTime): iterable
+    public function since(string $package, \DateTimeInterface $dateTime): iterable
     {
-        $releases = [];
+        Reader::setHttpClient($this->client);
 
-        foreach ($this->configuration->packages() as $package) {
-            $channel     = Reader::import(sprintf('feeds/package.%s.rss', $package->packageName()));
-            $previousMap = $this->buildPreviousMap($channel);
+        $feedUrl     = sprintf('feeds/package.%s.rss', $package);
+        $releases    = [];
+        $channel     = Reader::import($feedUrl);
+        $previousMap = $this->buildPreviousMap($channel);
 
-            /** @var \Zend\Feed\Reader\Entry\Rss $item */
-            foreach ($channel as $item) {
-                if ($item->getDateCreated() > $dateTime) {
-                    $version    = explode(' ', $item->getId(), 2)[1];
-                    $releases[] = Release::fromStringAndLink(
-                        $item->getId(),
-                        $item->getLink(),
-                        $previousMap[$version]
-                    );
-                }
+        /** @var \Zend\Feed\Reader\Entry\Rss $item */
+        foreach ($channel as $item) {
+            if ($item->getDateCreated() <= $dateTime) {
+                continue;
             }
+
+            $version    = explode(' ', $item->getId(), 2)[1];
+            $releases[] = Release::create(
+                $item->getId(),
+                $item->getLink(),
+                $previousMap[$version]
+            );
         }
 
         return $releases;
