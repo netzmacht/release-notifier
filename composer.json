@@ -32,5 +32,11 @@
     "require-dev": {
         "phpcq/all-tasks": "^1.2"
     },
-    "bin": ["bin/packagist-release-publisher"]
+    "bin": ["bin/packagist-release-publisher"],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev",
+            "dev-develop": "0.3.x-dev"
+        }
+    }
 }
