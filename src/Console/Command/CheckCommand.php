@@ -68,7 +68,7 @@ final class CheckCommand extends AbstractConfigBasedCommand
         foreach ($config['packages'] as $package) {
             $releases = $this->packageReleases->since($package['package'], $since);
             $count    = count($releases);
-            $total   += $total;
+            $total   += $count;
 
             if ($count) {
                 $output->writeln(sprintf('%s releases of %s', $count, $package['package']));

@@ -85,7 +85,7 @@ final class PublishCommand extends AbstractConfigBasedCommand
         foreach ($config['packages'] as $package) {
             $releases = $this->packageReleases->since($package['package'], $since);
             $count    = count($releases);
-            $total   += $total;
+            $total   += $count;
 
             $output->writeln(sprintf('%s releases of %s', $count, $package['package']));
 
