@@ -21,7 +21,20 @@ use Zend\ServiceManager\ServiceManager;
 (function () {
     $rootDir = dirname(__DIR__);
 
-    require_once $rootDir . '/vendor/autoload.php';
+    if (is_file($rootDir . '/vendor/autoload.php')) {
+        // Installed locally
+        require_once $rootDir . '/vendor/autoload.php';
+    } elseif (is_file($autoload = __DIR__ . '/../../../autoload.php')) {
+        // Installed locally
+        require_once $autoload;
+    } else {
+        fwrite(STDERR,
+            'You must set up the project dependencies, run the following commands:' . PHP_EOL .
+            'curl -s http://getcomposer.org/installer | php' . PHP_EOL .
+            'php composer.phar install' . PHP_EOL
+        );
+        exit(1);
+    }
 
     $services    = require $rootDir . '/config/services.php';
     $container   = new ServiceManager($services);
