@@ -8,7 +8,7 @@
  *
  */
 
-namespace App\Command;
+namespace App\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
