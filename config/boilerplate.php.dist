@@ -1,12 +1,12 @@
 <?php
 
 /**
- * packagist-release-publisher.
+ * Packagist release publisher.
  *
  * @package    packagist-release-publisher
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
- * @license    LGPL-3.0-or-later
+ * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
  * @filesource
  */
 
@@ -14,22 +14,19 @@ declare(strict_types=1);
 
 use App\Packagist\Release;
 use App\Publisher\Tapatalk\PostPublisher;
+use App\Publisher\Tapatalk\TopicPublisher;
 
 return [
-    // Url to packagist. Only change if you have a custom packagist installation.
-    'packagist' => [
-        'url' => 'https://packagist.org',
-    ],
-
     'publishers' => [
         // Tapatalk endpoint, usually the board url with mobiquo/mobiquo.php suffix
         [
             'name'     => 'forum-de',
-            'type'     => PostPublisher::class,
+            'type'     => PostPublisher::class, // Or TopicPublisher::class
             'config'   => [
-                'url'       => 'https://community.contao.org/de/mobiquo/mobiquo.php',
+                'url'       => 'https://example.com/mobiquo/mobiquo.php',
                 'user'      => '',
                 'password'  => '',
+                // Optional condition. Set to null if not required.
                 'condition' => function (Release $release): bool {
                     if ($release->version()->hasPreReleaseSuffix()) {
                         return false;
@@ -54,16 +51,14 @@ return [
         ],
     ],
 
-    // List of packages. Supported publishers are "post" and "topic". For a topic, you don't have to define a topicId.
-    // Custom renderer for each package are not supported right now but planned to be implemented.
+    // List of packages. Each publisher configuration has to refer to the publisher name configured above.
     'packages'  => [
         [
-            'package'    => 'netzmacht/contao-leaflet-libraries',
+            'package'    => 'foo/package-a',
             'publishers' => [
                 'forum-de' => [
-                    'forumId'   => 169,
-                    'topicId'   => 68417,
-                    'renderer'  => null,
+                    'forumId'   => 123,
+                    'topicId'   => 456, // Only required for the PostPublisher
                 ]
             ],
         ],

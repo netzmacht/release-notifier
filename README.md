@@ -2,6 +2,7 @@ Packagist release publisher
 ===========================
 
 This tool allows to publish releases published on packagist to different targets. 
+
 At the moment only tapatalk is supported.
 
 Requirements
@@ -13,36 +14,38 @@ Requirements
 Install
 -------
 
- 1. Create a project `composer create-project netzmacht/packagist-release-publisher release-publisher`
- 2. Copy `config/config.php.dist` to `config/config.php` and adjust the config
-    The rendering is done by a renderer which uses callbacks.
- 3. Call `php bin/release-publisher list-releases -v` to get all tracked packages
- 4. Call `php bin/release-publisher publish-notes -v` to publish the release notes.
+### Global installation 
 
-Options
--------
+ 1. Make sure that the composer global bin directory is part of your `PATH` environment variable.
+ 2. Install the tool with `composer global require netzmacht/packagist-release-publisher` 
+ 
+### Local installation
 
-By default the tool checks for releases made since the last time it published packages or today for the first run. 
-You can define a custom option by using the since option. Valid values are any string which can be parsed by `DateTime`.
+Alternatively you can install it in any directory locally
 
-```bash
+ 1. Install the tool with `composer require netzmacht/packagist-release-publisher`
+ 
 
-php bin/release-publisher list-releases --since="3 days ago" -v
-php bin/release-publisher publish-notes --since="3 days ago" -v
+Usage
+-----
 
-```
+The following description assumes you have installed the tool globally. If you have an local installation you have to
+adjust the executable path.
 
-*Note* If the last run time is not ignored and the last run time is newer than the since option, the last run time is 
-preferred.
-
-By default the tool stores the time when it's run the last time. You can define a custom option by ignore the last run
-time. 
-
-```bash
-
-php bin/release-publisher list-releases --ignore-last-run -v
-php bin/release-publisher publish-notes --ignore-last-run -v
-php bin/release-publisher list-releases --since="3 days ago" --ignore-last-run -v
-php bin/release-publisher publish-notes --since="3 days ago" --ignore-last-run -v
-
-```
+ 1. Create a configuration file in your current directory 
+    ```bash
+    packagist-release-publisher create-config config.php
+    ```
+ 2. Edit the configuration file with your publishers and packages.
+ 3. Check if any new releases where made (since last run). If config is used the first time, it's checked against today.
+    ```bash
+    packagist-release-publisher check -v
+    ```
+ 4. Let the tool publish your releases
+    ```bash
+    packagist-release-publisher publish -v
+    ``` 
+ 5. Setup an cron job to automate the task
+ 
+The tool used the *symfony/console*. You might use the `list` command or `--help` option to get more information about
+the provides commands.

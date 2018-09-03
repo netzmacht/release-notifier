@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace App\Packagist;
 
+use DateTimeInterface;
+
 /**
  * Class Release
  */
@@ -25,6 +27,13 @@ final class Release
      * @var string
      */
     private $vendor;
+
+    /**
+     * Release date.
+     *
+     * @var DateTimeInterface
+     */
+    private $date;
 
     /**
      * Package name.
@@ -64,14 +73,19 @@ final class Release
     /**
      * Create from string and link.
      *
-     * @param string       $release  The release as string.
-     * @param string       $link     The link.
-     * @param Version|null $previous Previous version.
+     * @param string             $release  The release as string.
+     * @param string             $link     The link.
+     * @param \DateTimeImmutable $date     The release date.
+     * @param Version|null       $previous Previous version.
      *
      * @return Release
      */
-    public static function create(string $release, string $link, ?Version $previous = null): self
-    {
+    public static function create(
+        string $release,
+        string $link,
+        \DateTimeImmutable $date,
+        ?Version $previous = null
+    ): self {
         preg_match('#([^/]+)/([^/]+)\s(.*)#', $release, $matches);
         $release = new static();
 
@@ -80,6 +94,7 @@ final class Release
         $release->version  = Version::fromString($matches[3]);
         $release->link     = $link;
         $release->previous = $previous;
+        $release->date     = $date;
 
         return $release;
     }
@@ -132,6 +147,16 @@ final class Release
     public function link(): string
     {
         return $this->link;
+    }
+
+    /**
+     * The release date.
+     *
+     * @return \DateTimeInterface
+     */
+    public function date(): \DateTimeInterface
+    {
+        return $this->date;
     }
 
     /**

@@ -12,8 +12,11 @@
 
 declare(strict_types=1);
 
-use App\Console\Command\ListReleasesCommand;
-use App\Console\Command\PublishReleaseNotesCommand;
+use App\Console\Command\CheckCommand;
+use App\Console\Command\CheckPackageCommand;
+use App\Console\Command\CreateConfigCommand;
+use App\Console\Command\PublishCommand;
+use App\History\LastRunInformation;
 use App\Packagist\PackageReleases;
 use App\Publisher\DelegatingPublisherFactory;
 use App\Publisher\PublisherFactory;
@@ -49,25 +52,36 @@ return [
         },
 
         /* Console commands */
-        ListReleasesCommand::class => function (ContainerInterface $container): ListReleasesCommand {
-            return new ListReleasesCommand(
-                $container->get(PackageReleases::class),
+        CreateConfigCommand::class => function (ContainerInterface $container): CreateConfigCommand {
+            return new CreateConfigCommand(
                 $container->get(Filesystem::class),
-                $container->get('config')['lastRunFile']
+                $container->get('config')['paths']['boilerplate']
             );
         },
 
-        PublishReleaseNotesCommand::class => function (ContainerInterface $container): PublishReleaseNotesCommand {
-            return new PublishReleaseNotesCommand(
-                $container->get(PublisherFactory::class),
-                $container->get(Filesystem::class),
+        CheckCommand::class => function (ContainerInterface $container): CheckCommand {
+            return new CheckCommand(
                 $container->get(PackageReleases::class),
-                $container->get('config')['lastRunFile']
+                $container->get(LastRunInformation::class)
+            );
+        },
+
+        CheckPackageCommand::class => function (ContainerInterface $container): CheckPackageCommand {
+            return new CheckPackageCommand(
+                $container->get(PackageReleases::class)
+            );
+        },
+
+        PublishCommand::class   => function (ContainerInterface $container): PublishCommand {
+            return new PublishCommand(
+                $container->get(PublisherFactory::class),
+                $container->get(PackageReleases::class),
+                $container->get(LastRunInformation::class)
             );
         },
 
         /* Publisher factory */
-        PublisherFactory::class           => function (ContainerInterface $container): PublisherFactory {
+        PublisherFactory::class => function (ContainerInterface $container): PublisherFactory {
             $factories = [];
             $config    = $container->get('config');
 
@@ -91,5 +105,13 @@ return [
         PackageReleases::class            => function (ContainerInterface $container): PackageReleases {
             return new PackageReleases($container->get(FeedReaderHttpClient::class));
         },
+
+        /* Last run information */
+        LastRunInformation::class => function (ContainerInterface $container): LastRunInformation {
+            return new LastRunInformation(
+                $container->get(Filesystem::class),
+                $container->get('config')['paths']['last_run']
+            );
+        }
     ],
 ];

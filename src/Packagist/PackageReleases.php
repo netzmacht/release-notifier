@@ -47,7 +47,7 @@ final class PackageReleases
      * @param string             $package  The full package name, e.g. vendor/package.
      * @param \DateTimeInterface $dateTime The date since when the packages should be collected.
      *
-     * @return iterable
+     * @return iterable|Release[]
      */
     public function since(string $package, \DateTimeInterface $dateTime): iterable
     {
@@ -68,6 +68,7 @@ final class PackageReleases
             $releases[] = Release::create(
                 $item->getId(),
                 $item->getLink(),
+                \DateTimeImmutable::createFromMutable($item->getDateCreated()),
                 $previousMap[$version]
             );
         }

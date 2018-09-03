@@ -10,8 +10,10 @@
  * @filesource
  */
 
-use App\Console\Command\ListReleasesCommand;
-use App\Console\Command\PublishReleaseNotesCommand;
+use App\Console\Command\CheckCommand;
+use App\Console\Command\CheckPackageCommand;
+use App\Console\Command\CreateConfigCommand;
+use App\Console\Command\PublishCommand;
 use App\Publisher\Tapatalk\TapatalkPublisherFactory;
 
 return (function () {
@@ -24,8 +26,10 @@ return (function () {
             'name' => 'packagist-release-publisher',
             'version' => '0.2.0',
             'commands' => [
-                PublishReleaseNotesCommand::class,
-                ListReleasesCommand::class
+                CreateConfigCommand::class,
+                CheckCommand::class,
+                CheckPackageCommand::class,
+                PublishCommand::class,
             ]
         ],
         'packagist' => [
@@ -36,6 +40,9 @@ return (function () {
                 TapatalkPublisherFactory::class
             ]
         ],
-        'lastRunFile'  => $applicationDir . '/lastrun.json',
+        'paths' => [
+            'boilerplate' => __DIR__ . '/boilerplate.php.dist',
+            'last_run'    => $applicationDir . '/lastrun.json'
+        ],
     ];
 })();
