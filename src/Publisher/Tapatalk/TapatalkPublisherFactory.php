@@ -70,13 +70,13 @@ final class TapatalkPublisherFactory implements PublisherFactory
      * @param PublisherConfiguration $configuration  The publisher configuration.
      * @param array                  $packages       Packages configuration.
      *
-     * @return TopicPublisher
+     * @return AbstractPublisher
      */
     private function createPublisher(
         string $publisherClass,
         PublisherConfiguration $configuration,
         array $packages
-    ): TopicPublisher {
+    ): AbstractPublisher {
         $tapatalk = $this->createTapatalkApiClient($configuration);
         $renderer = $this->createRenderer($configuration);
 
