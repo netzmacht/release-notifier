@@ -112,7 +112,7 @@ abstract class AbstractConfigBasedCommand extends Command
         $lastRun = null;
 
         if (!$input->getOption('ignore-last-run')) {
-            $lastRun = $this->lastRunInformation->get($input->getArgument('config'));
+            $lastRun = $this->lastRunInformation->get($this->getConfigFileArgument($input));
         }
 
         if ($input->getOption('since')) {
