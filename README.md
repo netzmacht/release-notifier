@@ -1,9 +1,9 @@
 Release notifier
-===========================
+================
 
-This tool allows to publish releases published on packagist to different targets. 
+This tool allows to notify about releases published on packagist to a broader audience. 
 
-At the moment only tapatalk is supported.
+There are multiple channels to share the release information planned. At the moment only tapatalk is supported.
 
 Requirements
 ------------
