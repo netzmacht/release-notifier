@@ -20,6 +20,7 @@ use App\History\History;
 use App\Package\PackagistReleases;
 use App\Package\Releases;
 use App\Publisher\DelegatingPublisherFactory;
+use App\Publisher\NoOpPublisherFactory;
 use App\Publisher\PublisherFactory;
 use App\Publisher\Tapatalk\TapatalkPublisherFactory;
 use App\Rss\Http\GuzzleClientAdapter;
@@ -33,6 +34,7 @@ return [
     'invokables' => [
         Filesystem::class               => Filesystem::class,
         TapatalkPublisherFactory::class => TapatalkPublisherFactory::class,
+        NoOpPublisherFactory::class     => NoOpPublisherFactory::class
     ],
     'factories'  => [
         /* Application config */

@@ -14,6 +14,7 @@ use App\Console\Command\CheckCommand;
 use App\Console\Command\CheckPackageCommand;
 use App\Console\Command\CreateConfigCommand;
 use App\Console\Command\PublishCommand;
+use App\Publisher\NoOpPublisherFactory;
 use App\Publisher\Tapatalk\TapatalkPublisherFactory;
 
 return (function () {
@@ -37,7 +38,8 @@ return (function () {
         ],
         'publishers' => [
             'factories' => [
-                TapatalkPublisherFactory::class
+                TapatalkPublisherFactory::class,
+                NoOpPublisherFactory::class
             ]
         ],
         'paths' => [
