@@ -61,17 +61,21 @@ final class CheckCommand extends AbstractConfigBasedCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->loadConfig($input);
-        $since  = $this->getSince($input);
-        $total  = 0;
+        $config     = $this->loadConfig($input);
+        $configFile = $this->getConfigFileArgument($input);
+        $total      = 0;
 
         foreach ($config['packages'] as $package) {
+            $lastRun  = $this->history->get($configFile, $package['package']);
+            $since    = $this->getSince($input, $lastRun);
             $releases = $this->packageReleases->since($package['package'], $since);
             $count    = count($releases);
             $total   += $count;
 
             if ($count) {
-                $output->writeln(sprintf('%s releases of %s', $count, $package['package']));
+                $output->writeln(
+                    sprintf('%s releases of %s since %s', $count, $package['package'], $since->format(DATE_ATOM))
+                );
             }
 
             foreach ($releases as $release) {
@@ -82,6 +86,6 @@ final class CheckCommand extends AbstractConfigBasedCommand
             }
         }
 
-        $output->writeln(sprintf('%s releases found since %s', $total, $since->format(DATE_ATOM)));
+        $output->writeln(sprintf('%s releases found', $total));
     }
 }

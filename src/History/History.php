@@ -58,33 +58,42 @@ final class History
      * Get the stored last run information for the given configuration file.
      *
      * @param string $configurationFile The configuration file.
+     * @param string $package           The package name.
      *
-     * @return \DateTimeInterface|null
+     * @return LastRun|null
      */
-    public function get(string $configurationFile): ?\DateTimeInterface
+    public function get(string $configurationFile, string $package): ?LastRun
     {
         $this->load();
 
-        if (!isset($this->information[$configurationFile])) {
+        if (!isset($this->information[$configurationFile][$package])) {
             return null;
         }
 
-        return new \DateTimeImmutable($this->information[$configurationFile]);
+        return new LastRun(
+            new \DateTimeImmutable($this->information[$configurationFile][$package]['lastRun']),
+            new \DateTimeImmutable($this->information[$configurationFile][$package]['lastModified'])
+        );
     }
 
     /**
      * Update the last run information.
      *
-     * @param string             $configurationFile The configuration file.
-     * @param \DateTimeInterface $dateTime          The date time.
+     * @param string  $configurationFile The configuration file.
+     * @param string  $package           The package name.
+     * @param LastRun $lastRun           The last run information.
      *
      * @return void
      */
-    public function update(string $configurationFile, \DateTimeInterface $dateTime): void
+    public function update(string $configurationFile, string $package, LastRun $lastRun): void
     {
         $this->load();
 
-        $this->information[$configurationFile] = $dateTime->format(DATE_ATOM);
+        $this->information[$configurationFile][$package] = [
+            'lastRun'      => $lastRun->lastRun()->format(DATE_ATOM),
+            'lastModified' => $lastRun->lastModified()->format(DATE_ATOM),
+        ];
+
         $this->fileSystem->dumpFile($this->fileName, \json_encode($this->information));
     }
 

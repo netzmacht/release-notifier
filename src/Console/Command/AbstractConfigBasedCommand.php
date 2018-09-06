@@ -13,6 +13,8 @@
 namespace App\Console\Command;
 
 use App\History\History;
+use App\History\LastRun;
+use DateTimeImmutable;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -103,33 +105,34 @@ abstract class AbstractConfigBasedCommand extends Command
     /**
      * Get the sinc date.
      *
-     * @param InputInterface $input The console input.
+     * @param InputInterface $input   The console input.
+     * @param LastRun|null   $lastRun The last run.
      *
-     * @return \DateTimeInterface
+     * @return DateTimeImmutable
      */
-    protected function getSince(InputInterface $input): \DateTimeInterface
+    protected function getSince(InputInterface $input, ?LastRun $lastRun): DateTimeImmutable
     {
-        $lastRun = null;
+        $lastModified = null;
 
-        if (!$input->getOption('ignore-last-run')) {
-            $lastRun = $this->history->get($this->getConfigFileArgument($input));
+        if ($lastRun && !$input->getOption('ignore-last-run')) {
+            $lastModified = $lastRun->lastModified();
         }
 
         if ($input->getOption('since')) {
-            $since = new \DateTimeImmutable($input->getOption('since'));
+            $since = new DateTimeImmutable($input->getOption('since'));
 
-            if ($since > $lastRun) {
+            if ($since > $lastModified) {
                 return $since;
             }
 
-            return $lastRun;
+            return $lastModified;
         }
 
-        if ($lastRun) {
-            return $lastRun;
+        if ($lastModified) {
+            return $lastModified;
         }
 
-        $dateTime = new \DateTimeImmutable();
+        $dateTime = new DateTimeImmutable();
         $dateTime = $dateTime->setTime(0, 0);
 
         return $dateTime;

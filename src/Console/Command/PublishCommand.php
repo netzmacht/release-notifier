@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace App\Console\Command;
 
 use App\History\History;
+use App\History\LastRun;
 use App\Package\Releases;
 use App\Publisher\DelegatingPublisher;
 use App\Publisher\Publisher;
@@ -75,19 +76,27 @@ final class PublishCommand extends AbstractConfigBasedCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $since     = $this->getSince($input);
-        $total     = 0;
-        $config    = $this->loadConfig($input);
-        $publisher = $this->createPublisher($config);
-
-        $output->writeln(sprintf('Check packages released since %s:', $since->format(DATE_ATOM)));
+        $configFile = $this->getConfigFileArgument($input);
+        $config     = $this->loadConfig($input);
+        $publisher  = $this->createPublisher($config);
+        $total      = 0;
 
         foreach ($config['packages'] as $package) {
+            $lastRun  = $this->history->get($configFile, $package['package']);
+            $since    = $this->getSince($input, $lastRun);
             $releases = $this->packageReleases->since($package['package'], $since);
-            $count    = count($releases);
-            $total   += $count;
 
-            $output->writeln(sprintf('%s releases of %s', $count, $package['package']));
+            $count  = count($releases);
+            $total += $count;
+
+            $output->writeln(
+                sprintf(
+                    '%s New releases of "%s" since %s',
+                    $count,
+                    $package['package'],
+                    $since->format(DATE_ATOM)
+                )
+            );
 
             foreach ($releases as $release) {
                 $publisher->publish($release);
@@ -97,11 +106,16 @@ final class PublishCommand extends AbstractConfigBasedCommand
                     OutputInterface::VERBOSITY_VERBOSE
                 );
             }
+
+            $this->updateLastRun(
+                $this->getConfigFileArgument($input),
+                $package['package'],
+                LastRun::now($releases->lastModified()),
+                $input->getOption('ignore-last-run')
+            );
         }
 
         $output->writeln(sprintf('%s releases published', $total));
-
-        $this->updateLastRun($this->getConfigFileArgument($input), $input->getOption('ignore-last-run'));
     }
 
     /**
@@ -128,17 +142,19 @@ final class PublishCommand extends AbstractConfigBasedCommand
     /**
      * Update the last run information.
      *
-     * @param string $configurationFile The configuration file.
-     * @param bool   $ignore            If true the last run is ignored.
+     * @param string  $configurationFile The configuration file.
+     * @param string  $package           The current package.
+     * @param LastRun $lastRun           Last run information.
+     * @param bool    $ignore            If true the last run is ignored.
      *
      * @return void
      */
-    private function updateLastRun(string $configurationFile, bool $ignore): void
+    private function updateLastRun(string $configurationFile, string $package, LastRun $lastRun, bool $ignore): void
     {
         if ($ignore) {
             return;
         }
 
-        $this->history->update($configurationFile, new \DateTimeImmutable());
+        $this->history->update($configurationFile, $package, $lastRun);
     }
 }
