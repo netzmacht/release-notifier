@@ -21,7 +21,7 @@ use App\Packagist\PackageReleases;
 use App\Publisher\DelegatingPublisherFactory;
 use App\Publisher\PublisherFactory;
 use App\Publisher\Tapatalk\TapatalkPublisherFactory;
-use App\Rss\Http\Client\GuzzleClientAdapter;
+use App\Rss\Http\GuzzleClientAdapter;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;

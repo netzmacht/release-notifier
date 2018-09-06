@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace App\Rss\Http\Client;
+namespace App\Rss\Http;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
