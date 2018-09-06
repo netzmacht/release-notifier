@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Packagist release publisher.
+ * Release notifier.
  *
- * @package    packagist-release-publisher
+ * @package    release-notifier
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2018 netzmacht David Molineus
  * @license    LGPL-3.0-or-later https://github.com/netzmacht/tapatalk-client-api/blob/master/LICENSE
@@ -19,12 +19,12 @@ use App\Publisher\Tapatalk\TapatalkPublisherFactory;
 return (function () {
     $uid            = posix_getuid();
     $shellUser      = posix_getpwuid($uid);
-    $applicationDir = $shellUser['dir'] . '/.packagist-release-publisher';
+    $applicationDir = $shellUser['dir'] . '/.release-notifier';
 
     return [
         'application' => [
-            'name' => 'packagist-release-publisher',
-            'version' => '0.2.0',
+            'name' => 'release-notifier',
+            'version' => '0.3.0',
             'commands' => [
                 CreateConfigCommand::class,
                 CheckCommand::class,

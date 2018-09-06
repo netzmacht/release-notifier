@@ -1,5 +1,5 @@
 {
-    "name": "netzmacht/packagist-release-publisher",
+    "name": "netzmacht/release-notifier",
     "description": "Ths package provides a CLI tool to create release notes of packagist releases.",
     "type": "project",
     "require": {
@@ -32,7 +32,7 @@
     "require-dev": {
         "phpcq/all-tasks": "^1.2"
     },
-    "bin": ["bin/packagist-release-publisher"],
+    "bin": ["bin/release-notifier"],
     "extra": {
         "branch-alias": {
             "dev-master": "0.2.x-dev",
