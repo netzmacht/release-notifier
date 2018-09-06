@@ -17,7 +17,8 @@ use App\Console\Command\CheckPackageCommand;
 use App\Console\Command\CreateConfigCommand;
 use App\Console\Command\PublishCommand;
 use App\History\LastRunInformation;
-use App\Packagist\PackageReleases;
+use App\Package\PackagistReleases;
+use App\Package\Releases;
 use App\Publisher\DelegatingPublisherFactory;
 use App\Publisher\PublisherFactory;
 use App\Publisher\Tapatalk\TapatalkPublisherFactory;
@@ -29,11 +30,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Zend\Feed\Reader\Http\ClientInterface as FeedReaderHttpClient;
 
 return [
-    'invokables'  => [
+    'invokables' => [
         Filesystem::class               => Filesystem::class,
         TapatalkPublisherFactory::class => TapatalkPublisherFactory::class,
     ],
-    'factories' => [
+    'factories'  => [
         /* Application config */
         'config'                   => function () {
             return new ArrayObject(require __DIR__ . '/config.php');
@@ -61,27 +62,27 @@ return [
 
         CheckCommand::class => function (ContainerInterface $container): CheckCommand {
             return new CheckCommand(
-                $container->get(PackageReleases::class),
+                $container->get(Releases::class),
                 $container->get(LastRunInformation::class)
             );
         },
 
         CheckPackageCommand::class => function (ContainerInterface $container): CheckPackageCommand {
             return new CheckPackageCommand(
-                $container->get(PackageReleases::class)
+                $container->get(Releases::class)
             );
         },
 
-        PublishCommand::class   => function (ContainerInterface $container): PublishCommand {
+        PublishCommand::class       => function (ContainerInterface $container): PublishCommand {
             return new PublishCommand(
                 $container->get(PublisherFactory::class),
-                $container->get(PackageReleases::class),
+                $container->get(Releases::class),
                 $container->get(LastRunInformation::class)
             );
         },
 
         /* Publisher factory */
-        PublisherFactory::class => function (ContainerInterface $container): PublisherFactory {
+        PublisherFactory::class     => function (ContainerInterface $container): PublisherFactory {
             $factories = [];
             $config    = $container->get('config');
 
@@ -93,7 +94,7 @@ return [
         },
 
         /* Rss feed http client */
-        FeedReaderHttpClient::class       => function (ContainerInterface $container): FeedReaderHttpClient {
+        FeedReaderHttpClient::class => function (ContainerInterface $container): FeedReaderHttpClient {
             $config = $container->get('config');
 
             return new GuzzleClientAdapter(
@@ -102,12 +103,12 @@ return [
         },
 
         /* Package releases */
-        PackageReleases::class            => function (ContainerInterface $container): PackageReleases {
-            return new PackageReleases($container->get(FeedReaderHttpClient::class));
+        Releases::class             => function (ContainerInterface $container): Releases {
+            return new PackagistReleases($container->get(FeedReaderHttpClient::class));
         },
 
         /* Last run information */
-        LastRunInformation::class => function (ContainerInterface $container): LastRunInformation {
+        LastRunInformation::class   => function (ContainerInterface $container): LastRunInformation {
             return new LastRunInformation(
                 $container->get(Filesystem::class),
                 $container->get('config')['paths']['last_run']

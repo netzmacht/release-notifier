@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace App\Console\Command;
 
 use App\History\LastRunInformation;
-use App\Packagist\PackageReleases;
+use App\Package\Releases;
 use App\Publisher\DelegatingPublisher;
 use App\Publisher\Publisher;
 use App\Publisher\PublisherConfiguration;
@@ -38,7 +38,7 @@ final class PublishCommand extends AbstractConfigBasedCommand
     /**
      * Package releases.
      *
-     * @var PackageReleases
+     * @var Releases
      */
     private $packageReleases;
 
@@ -46,12 +46,12 @@ final class PublishCommand extends AbstractConfigBasedCommand
      * PublishReleaseNoteCommand constructor.
      *
      * @param PublisherFactory   $publisherFactory   The publisher factory.
-     * @param PackageReleases    $packageReleases    Package releases.
+     * @param Releases           $packageReleases    Package releases.
      * @param LastRunInformation $lastRunInformation Last run information.
      */
     public function __construct(
         PublisherFactory $publisherFactory,
-        PackageReleases $packageReleases,
+        Releases $packageReleases,
         LastRunInformation $lastRunInformation
     ) {
         parent::__construct($lastRunInformation, 'publish');

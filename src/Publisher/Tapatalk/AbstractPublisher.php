@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace App\Publisher\Tapatalk;
 
 use App\Publisher\Publisher;
-use App\Packagist\Release;
+use App\Package\Release;
 use App\Publisher\Tapatalk\Renderer\Renderer;
 use Netzmacht\Tapatalk\Client;
 

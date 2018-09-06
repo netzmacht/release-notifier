@@ -10,7 +10,7 @@
  * @filesource
  */
 
-namespace App\Packagist;
+namespace App\Package;
 
 /**
  * Class Version

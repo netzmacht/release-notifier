@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace App\Packagist;
+namespace App\Package;
 
 use Composer\Semver\Semver;
 use Zend\Feed\Reader\Feed\FeedInterface;
@@ -22,7 +22,7 @@ use Zend\Feed\Reader\Reader;
 /**
  * Class PackageReleases
  */
-final class PackageReleases
+final class PackagistReleases implements Releases
 {
     /**
      * Http client.
@@ -47,9 +47,9 @@ final class PackageReleases
      * @param string             $package  The full package name, e.g. vendor/package.
      * @param \DateTimeInterface $dateTime The date since when the packages should be collected.
      *
-     * @return iterable|Release[]
+     * @return ReleaseIterator
      */
-    public function since(string $package, \DateTimeInterface $dateTime): iterable
+    public function since(string $package, \DateTimeInterface $dateTime): ReleaseIterator
     {
         Reader::setHttpClient($this->client);
 
@@ -73,7 +73,10 @@ final class PackageReleases
             );
         }
 
-        return $releases;
+        return new ReleaseIterator(
+            $releases,
+            \DateTimeImmutable::createFromMutable($channel->getDateModified())
+        );
     }
 
     /**

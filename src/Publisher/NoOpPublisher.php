@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace App\Publisher;
 
-use App\Packagist\Release;
+use App\Package\Release;
 
 /**
  * Class DebuggingPublisher

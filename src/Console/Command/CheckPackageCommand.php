@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace App\Console\Command;
 
-use App\Packagist\PackageReleases;
+use App\Package\Releases;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,20 +31,20 @@ final class CheckPackageCommand extends Command
     /**
      * Package releases.
      *
-     * @var PackageReleases
+     * @var Releases
      */
-    private $packageReleases;
+    private $releases;
 
     /**
      * CheckCommand constructor.
      *
-     * @param PackageReleases    $packageReleases    Package Releases.
+     * @param Releases $packageReleases Package Releases.
      */
-    public function __construct(PackageReleases $packageReleases)
+    public function __construct(Releases $packageReleases)
     {
         parent::__construct('check-package');
 
-        $this->packageReleases = $packageReleases;
+        $this->releases = $packageReleases;
     }
 
     /**
@@ -74,7 +74,7 @@ final class CheckPackageCommand extends Command
     {
         $package  = $input->getArgument('package');
         $since    = $this->getSince($input);
-        $releases = $this->packageReleases->since($package, $since);
+        $releases = $this->releases->since($package, $since);
         $count    = count($releases);
 
         if ($count) {
