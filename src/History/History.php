@@ -19,7 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Class LastRunInformation
  */
-final class LastRunInformation
+final class History
 {
     /**
      * File system information.

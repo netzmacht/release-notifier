@@ -16,7 +16,7 @@ use App\Console\Command\CheckCommand;
 use App\Console\Command\CheckPackageCommand;
 use App\Console\Command\CreateConfigCommand;
 use App\Console\Command\PublishCommand;
-use App\History\LastRunInformation;
+use App\History\History;
 use App\Package\PackagistReleases;
 use App\Package\Releases;
 use App\Publisher\DelegatingPublisherFactory;
@@ -63,7 +63,7 @@ return [
         CheckCommand::class => function (ContainerInterface $container): CheckCommand {
             return new CheckCommand(
                 $container->get(Releases::class),
-                $container->get(LastRunInformation::class)
+                $container->get(History::class)
             );
         },
 
@@ -77,7 +77,7 @@ return [
             return new PublishCommand(
                 $container->get(PublisherFactory::class),
                 $container->get(Releases::class),
-                $container->get(LastRunInformation::class)
+                $container->get(History::class)
             );
         },
 
@@ -108,8 +108,8 @@ return [
         },
 
         /* Last run information */
-        LastRunInformation::class   => function (ContainerInterface $container): LastRunInformation {
-            return new LastRunInformation(
+        History::class              => function (ContainerInterface $container): History {
+            return new History(
                 $container->get(Filesystem::class),
                 $container->get('config')['paths']['last_run']
             );

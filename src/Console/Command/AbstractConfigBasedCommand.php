@@ -12,7 +12,7 @@
 
 namespace App\Console\Command;
 
-use App\History\LastRunInformation;
+use App\History\History;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,21 +27,21 @@ abstract class AbstractConfigBasedCommand extends Command
     /**
      * Last run information.
      *
-     * @var LastRunInformation
+     * @var History
      */
-    protected $lastRunInformation;
+    protected $history;
 
     /**
      * AbstractConfigBasedCommand constructor.
      *
-     * @param LastRunInformation $lastRunInformation Last run information.
-     * @param null|string        $name               Command name.
+     * @param History     $history Last run information.
+     * @param null|string $name    Command name.
      */
-    public function __construct(LastRunInformation $lastRunInformation, ?string $name = null)
+    public function __construct(History $history, ?string $name = null)
     {
         parent::__construct($name);
 
-        $this->lastRunInformation = $lastRunInformation;
+        $this->history = $history;
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class AbstractConfigBasedCommand extends Command
         $lastRun = null;
 
         if (!$input->getOption('ignore-last-run')) {
-            $lastRun = $this->lastRunInformation->get($this->getConfigFileArgument($input));
+            $lastRun = $this->history->get($this->getConfigFileArgument($input));
         }
 
         if ($input->getOption('since')) {

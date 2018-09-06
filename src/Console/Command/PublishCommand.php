@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace App\Console\Command;
 
-use App\History\LastRunInformation;
+use App\History\History;
 use App\Package\Releases;
 use App\Publisher\DelegatingPublisher;
 use App\Publisher\Publisher;
@@ -45,16 +45,16 @@ final class PublishCommand extends AbstractConfigBasedCommand
     /**
      * PublishReleaseNoteCommand constructor.
      *
-     * @param PublisherFactory   $publisherFactory   The publisher factory.
-     * @param Releases           $packageReleases    Package releases.
-     * @param LastRunInformation $lastRunInformation Last run information.
+     * @param PublisherFactory $publisherFactory The publisher factory.
+     * @param Releases         $packageReleases  Package releases.
+     * @param History          $history          Last run information.
      */
     public function __construct(
         PublisherFactory $publisherFactory,
         Releases $packageReleases,
-        LastRunInformation $lastRunInformation
+        History $history
     ) {
-        parent::__construct($lastRunInformation, 'publish');
+        parent::__construct($history, 'publish');
 
         $this->publisherFactory = $publisherFactory;
         $this->packageReleases  = $packageReleases;
@@ -139,6 +139,6 @@ final class PublishCommand extends AbstractConfigBasedCommand
             return;
         }
 
-        $this->lastRunInformation->update($configurationFile, new \DateTimeImmutable());
+        $this->history->update($configurationFile, new \DateTimeImmutable());
     }
 }

@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace App\Console\Command;
 
-use App\History\LastRunInformation;
+use App\History\History;
 use App\Package\Releases;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,12 +36,12 @@ final class CheckCommand extends AbstractConfigBasedCommand
     /**
      * CheckCommand constructor.
      *
-     * @param Releases           $packageReleases    Package Releases.
-     * @param LastRunInformation $lastRunInformation Last run information.
+     * @param Releases $packageReleases Package Releases.
+     * @param History  $history         Last run information.
      */
-    public function __construct(Releases $packageReleases, LastRunInformation $lastRunInformation)
+    public function __construct(Releases $packageReleases, History $history)
     {
-        parent::__construct($lastRunInformation, 'check');
+        parent::__construct($history, 'check');
 
         $this->packageReleases = $packageReleases;
     }

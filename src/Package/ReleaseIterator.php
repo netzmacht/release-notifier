@@ -14,7 +14,7 @@ namespace App\Package;
 
 use ArrayIterator;
 use Countable;
-use DateTimeInterface;
+use DateTimeImmutable;
 use IteratorAggregate;
 
 /**
@@ -22,12 +22,12 @@ use IteratorAggregate;
  *
  * @package App\Package
  */
-class ReleaseIterator implements IteratorAggregate, Countable
+final class ReleaseIterator implements IteratorAggregate, Countable
 {
     /**
      * Last modified date of the package release information.
      *
-     * @var DateTimeInterface
+     * @var DateTimeImmutable
      */
     private $lastModified;
 
@@ -41,13 +41,23 @@ class ReleaseIterator implements IteratorAggregate, Countable
     /**
      * ReleaseIterator constructor.
      *
-     * @param DateTimeInterface $lastModified Last modified date of the package release information.
+     * @param DateTimeImmutable $lastModified Last modified date of the package release information.
      * @param Release[]|array   $releases     List of releases.
      */
-    public function __construct($releases, DateTimeInterface $lastModified)
+    public function __construct($releases, DateTimeImmutable $lastModified)
     {
         $this->lastModified = $lastModified;
         $this->releases     = $releases;
+    }
+
+    /**
+     * Get lastModified.
+     *
+     * @return DateTimeImmutable
+     */
+    public function lastModified(): DateTimeImmutable
+    {
+        return $this->lastModified;
     }
 
     /**
