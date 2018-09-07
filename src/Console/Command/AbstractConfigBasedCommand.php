@@ -12,7 +12,8 @@
 
 namespace Netzmacht\ReleaseNotifier\Console\Command;
 
-use Netzmacht\ReleaseNotifier\History\ConfigHistory;
+use Assert\Assert;
+use Assert\InvalidArgumentException;
 use Netzmacht\ReleaseNotifier\History\History;
 use Netzmacht\ReleaseNotifier\History\LastRun;
 use DateTimeImmutable;
@@ -79,10 +80,23 @@ abstract class AbstractConfigBasedCommand extends Command
      * @param InputInterface $input The console input.
      *
      * @return array
+     *
+     * @throws InvalidArgumentException When invalid config file is given.
      */
     protected function loadConfig(InputInterface $input): array
     {
-        return include $this->getConfigFileArgument($input);
+        $file   = $this->getConfigFileArgument($input);
+        $config = include $file;
+
+        Assert::that($config)
+            ->isArray()
+            ->keyExists('publishers')
+            ->keyExists('packages');
+
+        Assert::that($config['publishers'])->isArray();
+        Assert::that($config['packages'])->isArray();
+
+        return $config;
     }
 
     /**
@@ -91,6 +105,8 @@ abstract class AbstractConfigBasedCommand extends Command
      * @param InputInterface $input The input.
      *
      * @return string
+     *
+     * @throws InvalidArgumentException When invalid config file is given.
      */
     protected function getConfigFileArgument(InputInterface $input): string
     {
@@ -100,7 +116,11 @@ abstract class AbstractConfigBasedCommand extends Command
             $configFile = Path::makeAbsolute($configFile, Path::normalize(getcwd()));
         }
 
-        return Path::canonicalize($configFile);
+        $configFile = Path::canonicalize($configFile);
+
+        Assert::that($configFile)->file($configFile);
+
+        return $configFile;
     }
 
     /**
@@ -110,6 +130,8 @@ abstract class AbstractConfigBasedCommand extends Command
      * @param LastRun|null   $lastRun The last run.
      *
      * @return DateTimeImmutable
+     *
+     * @throws \Exception When creating date time fails.
      */
     protected function getSince(InputInterface $input, ?LastRun $lastRun): DateTimeImmutable
     {
