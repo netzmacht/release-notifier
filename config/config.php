@@ -18,10 +18,6 @@ use Netzmacht\ReleaseNotifier\Publisher\NoOpPublisherFactory;
 use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\TapatalkPublisherFactory;
 
 return (function () {
-    $uid            = posix_getuid();
-    $shellUser      = posix_getpwuid($uid);
-    $applicationDir = $shellUser['dir'] . '/.release-notifier';
-
     return [
         'application' => [
             'name' => 'release-notifier',
@@ -44,7 +40,6 @@ return (function () {
         ],
         'paths' => [
             'boilerplate' => __DIR__ . '/boilerplate.php.dist',
-            'last_run'    => $applicationDir . '/lastrun.json'
         ],
     ];
 })();

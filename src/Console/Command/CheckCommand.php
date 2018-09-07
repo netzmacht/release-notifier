@@ -61,10 +61,11 @@ final class CheckCommand extends AbstractConfigBasedCommand
     {
         $config     = $this->loadConfig($input);
         $configFile = $this->getConfigFileArgument($input);
+        $history    = $this->history->get($configFile);
         $total      = 0;
 
         foreach ($config['packages'] as $package) {
-            $lastRun  = $this->history->get($configFile, $package['package']);
+            $lastRun  = $history->get($package['package']);
             $since    = $this->getSince($input, $lastRun);
             $releases = $this->packageReleases->since($package['package'], $since);
             $count    = count($releases);

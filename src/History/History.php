@@ -14,13 +14,17 @@ declare(strict_types=1);
 
 namespace Netzmacht\ReleaseNotifier\History;
 
+use function pathinfo;
+use function sprintf;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Class LastRunInformation
+ * Class History
  */
 final class History
 {
+    private const HISTORY_FILE = '%s/.%s.history.json';
+
     /**
      * File system information.
      *
@@ -29,99 +33,27 @@ final class History
     private $fileSystem;
 
     /**
-     * Map of configuration file name and the latest run time.
-     *
-     * @var \DateTimeInterface[]
-     */
-    private $information;
-
-    /**
-     * File name.
-     *
-     * @var string
-     */
-    private $fileName;
-
-    /**
      * LastRunInformation constructor.
      *
      * @param Filesystem $fileSystem The file system.
-     * @param string     $fileName   The last run file.
      */
-    public function __construct(Filesystem $fileSystem, string $fileName)
+    public function __construct(Filesystem $fileSystem)
     {
         $this->fileSystem = $fileSystem;
-        $this->fileName   = $fileName;
     }
 
     /**
      * Get the stored last run information for the given configuration file.
      *
      * @param string $configurationFile The configuration file.
-     * @param string $package           The package name.
      *
-     * @return LastRun|null
+     * @return ConfigHistory
      */
-    public function get(string $configurationFile, string $package): ?LastRun
+    public function get(string $configurationFile): ConfigHistory
     {
-        $this->load();
+        $pathInfo = pathinfo($configurationFile);
+        $fileName = sprintf(static::HISTORY_FILE, $pathInfo['dirname'], $pathInfo['basename']);
 
-        if (!isset($this->information[$configurationFile][$package])) {
-            return null;
-        }
-
-        return new LastRun(
-            new \DateTimeImmutable($this->information[$configurationFile][$package]['lastRun']),
-            new \DateTimeImmutable($this->information[$configurationFile][$package]['lastModified'])
-        );
-    }
-
-    /**
-     * Update the last run information.
-     *
-     * @param string  $configurationFile The configuration file.
-     * @param string  $package           The package name.
-     * @param LastRun $lastRun           The last run information.
-     *
-     * @return void
-     */
-    public function update(string $configurationFile, string $package, LastRun $lastRun): void
-    {
-        $this->load();
-
-        $this->information[$configurationFile][$package] = [
-            'lastRun'      => $lastRun->lastRun()->format(DATE_ATOM),
-            'lastModified' => $lastRun->lastModified()->format(DATE_ATOM),
-        ];
-
-        $this->fileSystem->dumpFile($this->fileName, \json_encode($this->information));
-    }
-
-    /**
-     * Load the last run information.
-     *
-     * @return void
-     *
-     * @throws \RuntimeException When information could not be serialized as json string.
-     */
-    private function load(): void
-    {
-        if ($this->information !== null) {
-            return;
-        }
-
-        if (!$this->fileSystem->exists($this->fileName)) {
-            $this->fileSystem->dumpFile($this->fileName, '{}');
-            $this->information = [];
-
-            return;
-        }
-
-        $content           = file_get_contents($this->fileName);
-        $this->information = \json_decode($content, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException('Loading last run information failed with json_error:' . json_last_error());
-        }
+        return new ConfigHistory($this->fileSystem, $fileName);
     }
 }

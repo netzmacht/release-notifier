@@ -12,6 +12,11 @@
 
 namespace Netzmacht\ReleaseNotifier\History;
 
+use Assert\Assert;
+use Assert\InvalidArgumentException;
+use const DATE_ATOM;
+use Exception;
+
 /**
  * Class LastRun
  */
@@ -49,10 +54,38 @@ final class LastRun
      * @param \DateTimeImmutable $lastModified The last modified date.
      *
      * @return LastRun
+     *
+     * @throws Exception When creating date time object fails.
      */
     public static function now(\DateTimeImmutable $lastModified): self
     {
         return new self(new \DateTimeImmutable(), $lastModified);
+    }
+
+    /**
+     * Create from array.
+     *
+     * @param array $information The scalar information.
+     *
+     * @return LastRun
+     *
+     * @throws InvalidArgumentException If any invalid data is given.
+     * @throws Exception                When creating date time objects fails.
+     */
+    public static function fromArray(array $information): LastRun
+    {
+        Assert::that($information)
+            ->isArray()
+            ->keyExists('lastRun')
+            ->keyExists('lastModified');
+
+        Assert::that($information['lastRun'])->date(DATE_ATOM);
+        Assert::that($information['lastModified'])->date(DATE_ATOM);
+
+        return new static(
+            new \DateTimeImmutable($information['lastRun']),
+            new \DateTimeImmutable($information['lastModified'])
+        );
     }
 
     /**
@@ -97,5 +130,18 @@ final class LastRun
         }
 
         return false;
+    }
+
+    /**
+     * Create array with scalar dates as string.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'lastRun'      => $this->lastRun->format(DATE_ATOM),
+            'lastModified' => $this->lastRun->format(DATE_ATOM),
+        ];
     }
 }

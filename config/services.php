@@ -111,10 +111,7 @@ return [
 
         /* Last run information */
         History::class              => function (ContainerInterface $container): History {
-            return new History(
-                $container->get(Filesystem::class),
-                $container->get('config')['paths']['last_run']
-            );
+            return new History($container->get(Filesystem::class));
         }
     ],
 ];

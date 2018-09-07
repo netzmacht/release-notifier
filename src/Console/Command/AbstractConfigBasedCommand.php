@@ -12,6 +12,7 @@
 
 namespace Netzmacht\ReleaseNotifier\Console\Command;
 
+use Netzmacht\ReleaseNotifier\History\ConfigHistory;
 use Netzmacht\ReleaseNotifier\History\History;
 use Netzmacht\ReleaseNotifier\History\LastRun;
 use DateTimeImmutable;

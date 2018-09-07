@@ -78,11 +78,12 @@ final class PublishCommand extends AbstractConfigBasedCommand
     {
         $configFile = $this->getConfigFileArgument($input);
         $config     = $this->loadConfig($input);
+        $history    = $this->history->get($configFile);
         $publisher  = $this->createPublisher($config);
         $total      = 0;
 
         foreach ($config['packages'] as $package) {
-            $lastRun  = $this->history->get($configFile, $package['package']);
+            $lastRun  = $history->get($configFile, $package['package']);
             $since    = $this->getSince($input, $lastRun);
             $releases = $this->packageReleases->since($package['package'], $since);
 
@@ -107,12 +108,9 @@ final class PublishCommand extends AbstractConfigBasedCommand
                 );
             }
 
-            $this->updateLastRun(
-                $this->getConfigFileArgument($input),
-                $package['package'],
-                LastRun::now($releases->lastModified()),
-                $input->getOption('ignore-last-run')
-            );
+            if (!$input->getOption('ignore-last-run')) {
+                $history->update($package['package'], LastRun::now($releases->lastModified()));
+            }
         }
 
         $output->writeln(sprintf('%s releases published', $total));
@@ -137,24 +135,5 @@ final class PublishCommand extends AbstractConfigBasedCommand
         }
 
         return new DelegatingPublisher($publishers);
-    }
-
-    /**
-     * Update the last run information.
-     *
-     * @param string  $configurationFile The configuration file.
-     * @param string  $package           The current package.
-     * @param LastRun $lastRun           Last run information.
-     * @param bool    $ignore            If true the last run is ignored.
-     *
-     * @return void
-     */
-    private function updateLastRun(string $configurationFile, string $package, LastRun $lastRun, bool $ignore): void
-    {
-        if ($ignore) {
-            return;
-        }
-
-        $this->history->update($configurationFile, $package, $lastRun);
     }
 }
