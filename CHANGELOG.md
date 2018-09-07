@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Change Publisher interface to count the number of successful made publishments.
+
+- Use different history files for each config files stored in the same directory as the config file
+
 - Change namespace from App to Netzmacht\ReleaseNotifier
 
 - Use last modified date of packagist instead of last run of the tool

@@ -32,7 +32,8 @@ final class NoOpPublisher implements Publisher
     /**
      * {@inheritdoc}
      */
-    public function publish(Release $release): void
+    public function publish(Release $release): int
     {
+        return 1;
     }
 }

@@ -112,7 +112,7 @@ abstract class AbstractPublisher implements Publisher
      *
      * @throws \RuntimeException If invalid configuration is loaded.
      */
-    public function publish(Release $release): void
+    public function publish(Release $release): int
     {
         $configuration = null;
 
@@ -133,6 +133,8 @@ abstract class AbstractPublisher implements Publisher
         $body    = $this->renderer->renderBody($release);
 
         $this->createEntry($this->client, $configuration, $subject, $body);
+
+        return 1;
     }
 
     /**

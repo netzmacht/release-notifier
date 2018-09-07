@@ -100,18 +100,25 @@ final class ConfigHistory
      */
     private function load(): void
     {
-        if (!$this->filesystem->exists($this->historyFileName)) {
-            $this->filesystem->dumpFile($this->historyFileName, '{}');
-            $this->information = [];
-
+        if ($this->information !== null) {
             return;
         }
 
-        $content           = file_get_contents($this->historyFileName);
-        $this->information = json_decode($content, true);
+        $this->information = [];
+
+        if (!$this->filesystem->exists($this->historyFileName)) {
+            return;
+        }
+
+        $content     = file_get_contents($this->historyFileName);
+        $information = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \RuntimeException('Loading last run information failed with json_error:' . json_last_error());
+        }
+
+        foreach ($information as $package => $history) {
+            $this->information[$package] = LastRun::fromArray($history);
         }
     }
 }

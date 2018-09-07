@@ -31,11 +31,11 @@ interface Publisher
     public function supports(Release $release): bool;
 
     /**
-     * Publish the release.
+     * Publish the release and return the number of created publishes.
      *
      * @param Release $release The release.
      *
-     * @return void
+     * @return int
      */
-    public function publish(Release $release): void;
+    public function publish(Release $release): int;
 }

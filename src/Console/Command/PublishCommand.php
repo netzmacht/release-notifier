@@ -100,10 +100,10 @@ final class PublishCommand extends AbstractConfigBasedCommand
             );
 
             foreach ($releases as $release) {
-                $publisher->publish($release);
+                $count = $publisher->publish($release);
 
                 $output->writeln(
-                    sprintf(' - %s release published', $release->version()),
+                    sprintf(' - %s release published %s times', $release->version(), $count),
                     OutputInterface::VERBOSITY_VERBOSE
                 );
             }

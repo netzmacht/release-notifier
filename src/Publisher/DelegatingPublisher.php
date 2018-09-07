@@ -55,12 +55,16 @@ final class DelegatingPublisher implements Publisher
     /**
      * {@inheritdoc}
      */
-    public function publish(Release $release): void
+    public function publish(Release $release): int
     {
+        $count = 0;
+
         foreach ($this->publisher as $publisher) {
             if ($publisher->supports($release)) {
-                $publisher->publish($release);
+                $count += $publisher->publish($release);
             }
         }
+
+        return $count;
     }
 }
