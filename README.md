@@ -49,3 +49,12 @@ adjust the executable path.
  
 The tool used the *symfony/console*. You might use the `list` command or `--help` option to get more information about
 the provides commands.
+
+
+Migrate from netzmacht/packagist-release-publisher
+--------------------------------------------------
+
+The tool was previously named "netzmacht/packagist-release-publisher". To migrate 
+
+ 1. Replace namespaces beginning with "App\" with "Netzmacht\ReleaseNotifier\" in your config file.
+ 2. Be aware that last run information has changed and are not migrated.
