@@ -10,10 +10,10 @@
  * @filesource
  */
 
-namespace App\Console\Command;
+namespace Netzmacht\ReleaseNotifier\Console\Command;
 
-use App\History\History;
-use App\History\LastRun;
+use Netzmacht\ReleaseNotifier\History\History;
+use Netzmacht\ReleaseNotifier\History\LastRun;
 use DateTimeImmutable;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

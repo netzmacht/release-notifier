@@ -10,7 +10,7 @@
  * @filesource
  */
 
-namespace App\Publisher;
+namespace Netzmacht\ReleaseNotifier\Publisher;
 
 /**
  * Class DelegatingPublisherFactory

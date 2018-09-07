@@ -12,14 +12,12 @@
 
 declare(strict_types=1);
 
-namespace App\Publisher;
+namespace Netzmacht\ReleaseNotifier\Publisher;
 
-use App\Package\Release;
+use Netzmacht\ReleaseNotifier\Package\Release;
 
 /**
  * Class DebuggingPublisher
- *
- * @package App\Publisher
  */
 final class NoOpPublisher implements Publisher
 {

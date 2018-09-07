@@ -12,14 +12,12 @@
 
 declare(strict_types=1);
 
-namespace App\Publisher\Tapatalk\Renderer;
+namespace Netzmacht\ReleaseNotifier\Publisher\Tapatalk\Renderer;
 
-use App\Package\Release;
+use Netzmacht\ReleaseNotifier\Package\Release;
 
 /**
  * Class CallableRenderer
- *
- * @package App\Renderer
  */
 final class CallbackRenderer implements Renderer
 {

@@ -12,9 +12,9 @@
 
 declare(strict_types=1);
 
-namespace App\Publisher\Tapatalk\Renderer;
+namespace Netzmacht\ReleaseNotifier\Publisher\Tapatalk\Renderer;
 
-use App\Package\Release;
+use Netzmacht\ReleaseNotifier\Package\Release;
 
 /**
  * Renderer renders the subject and body for a release.

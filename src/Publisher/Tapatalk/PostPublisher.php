@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace App\Publisher\Tapatalk;
+namespace Netzmacht\ReleaseNotifier\Publisher\Tapatalk;
 
 use Netzmacht\Tapatalk\Client;
 

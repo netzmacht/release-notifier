@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace Netzmacht\ReleaseNotifier;
 
 use Symfony\Component\Console\Application;
 use Zend\ServiceManager\ServiceManager;

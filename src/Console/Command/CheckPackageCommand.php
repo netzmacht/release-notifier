@@ -12,9 +12,9 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Command;
+namespace Netzmacht\ReleaseNotifier\Console\Command;
 
-use App\Package\Releases;
+use Netzmacht\ReleaseNotifier\Package\Releases;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,8 +23,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class CheckPackageCommand
- *
- * @package App\Console\Command
  */
 final class CheckPackageCommand extends Command
 {
@@ -95,6 +93,8 @@ final class CheckPackageCommand extends Command
      * @param InputInterface $input The console input.
      *
      * @return \DateTimeInterface
+     *
+     * @throws \Exception When creating DateTime object fails.
      */
     private function getSince(InputInterface $input): \DateTimeInterface
     {

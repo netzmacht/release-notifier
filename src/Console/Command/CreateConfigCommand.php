@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Command;
+namespace Netzmacht\ReleaseNotifier\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

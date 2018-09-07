@@ -10,12 +10,10 @@
  * @filesource
  */
 
-namespace App\Publisher;
+namespace Netzmacht\ReleaseNotifier\Publisher;
 
 /**
  * Class NoOpPublisherFactory
- *
- * @package App\Publisher
  */
 final class NoOpPublisherFactory implements PublisherFactory
 {

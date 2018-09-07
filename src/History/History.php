@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace App\History;
+namespace Netzmacht\ReleaseNotifier\History;
 
 use Symfony\Component\Filesystem\Filesystem;
 

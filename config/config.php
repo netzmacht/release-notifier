@@ -10,12 +10,12 @@
  * @filesource
  */
 
-use App\Console\Command\CheckCommand;
-use App\Console\Command\CheckPackageCommand;
-use App\Console\Command\CreateConfigCommand;
-use App\Console\Command\PublishCommand;
-use App\Publisher\NoOpPublisherFactory;
-use App\Publisher\Tapatalk\TapatalkPublisherFactory;
+use Netzmacht\ReleaseNotifier\Console\Command\CheckCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\CheckPackageCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\CreateConfigCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\PublishCommand;
+use Netzmacht\ReleaseNotifier\Publisher\NoOpPublisherFactory;
+use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\TapatalkPublisherFactory;
 
 return (function () {
     $uid            = posix_getuid();

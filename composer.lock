@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "c1fa7837853a6f62de3f66cc2223ef94",
@@ -1735,17 +1735,6 @@
         {
             "name": "phpcq/all-tasks",
             "version": "1.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpcq/all-tasks.git",
-                "reference": "f851ed0bd3097132ea673ab265f4920de2d42f17"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpcq/all-tasks/zipball/f851ed0bd3097132ea673ab265f4920de2d42f17",
-                "reference": "f851ed0bd3097132ea673ab265f4920de2d42f17",
-                "shasum": ""
-            },
             "require": {
                 "pdepend/pdepend": "^2.2.1",
                 "php": "^5.4 | ^7.0",

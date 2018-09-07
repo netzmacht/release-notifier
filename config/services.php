@@ -12,18 +12,18 @@
 
 declare(strict_types=1);
 
-use App\Console\Command\CheckCommand;
-use App\Console\Command\CheckPackageCommand;
-use App\Console\Command\CreateConfigCommand;
-use App\Console\Command\PublishCommand;
-use App\History\History;
-use App\Package\PackagistReleases;
-use App\Package\Releases;
-use App\Publisher\DelegatingPublisherFactory;
-use App\Publisher\NoOpPublisherFactory;
-use App\Publisher\PublisherFactory;
-use App\Publisher\Tapatalk\TapatalkPublisherFactory;
-use App\Rss\Http\GuzzleClientAdapter;
+use Netzmacht\ReleaseNotifier\Console\Command\CheckCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\CheckPackageCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\CreateConfigCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\PublishCommand;
+use Netzmacht\ReleaseNotifier\History\History;
+use Netzmacht\ReleaseNotifier\Package\PackagistReleases;
+use Netzmacht\ReleaseNotifier\Package\Releases;
+use Netzmacht\ReleaseNotifier\Publisher\DelegatingPublisherFactory;
+use Netzmacht\ReleaseNotifier\Publisher\NoOpPublisherFactory;
+use Netzmacht\ReleaseNotifier\Publisher\PublisherFactory;
+use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\TapatalkPublisherFactory;
+use Netzmacht\ReleaseNotifier\Rss\Http\GuzzleClientAdapter;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;

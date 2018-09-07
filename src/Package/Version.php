@@ -10,7 +10,7 @@
  * @filesource
  */
 
-namespace App\Package;
+namespace Netzmacht\ReleaseNotifier\Package;
 
 /**
  * Class Version

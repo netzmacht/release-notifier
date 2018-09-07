@@ -10,7 +10,7 @@
  * @filesource
  */
 
-namespace App\History;
+namespace Netzmacht\ReleaseNotifier\History;
 
 /**
  * Class LastRun

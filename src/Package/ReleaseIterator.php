@@ -10,7 +10,7 @@
  * @filesource
  */
 
-namespace App\Package;
+namespace Netzmacht\ReleaseNotifier\Package;
 
 use ArrayIterator;
 use Countable;
@@ -19,8 +19,6 @@ use IteratorAggregate;
 
 /**
  * Class ReleaseIterator
- *
- * @package App\Package
  */
 final class ReleaseIterator implements IteratorAggregate, Countable
 {

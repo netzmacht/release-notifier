@@ -12,17 +12,15 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Command;
+namespace Netzmacht\ReleaseNotifier\Console\Command;
 
-use App\History\History;
-use App\Package\Releases;
+use Netzmacht\ReleaseNotifier\History\History;
+use Netzmacht\ReleaseNotifier\Package\Releases;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class CheckCommand
- *
- * @package App\Console\Command
  */
 final class CheckCommand extends AbstractConfigBasedCommand
 {

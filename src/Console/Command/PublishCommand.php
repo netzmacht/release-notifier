@@ -12,15 +12,15 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Command;
+namespace Netzmacht\ReleaseNotifier\Console\Command;
 
-use App\History\History;
-use App\History\LastRun;
-use App\Package\Releases;
-use App\Publisher\DelegatingPublisher;
-use App\Publisher\Publisher;
-use App\Publisher\PublisherConfiguration;
-use App\Publisher\PublisherFactory;
+use Netzmacht\ReleaseNotifier\History\History;
+use Netzmacht\ReleaseNotifier\History\LastRun;
+use Netzmacht\ReleaseNotifier\Package\Releases;
+use Netzmacht\ReleaseNotifier\Publisher\DelegatingPublisher;
+use Netzmacht\ReleaseNotifier\Publisher\Publisher;
+use Netzmacht\ReleaseNotifier\Publisher\PublisherConfiguration;
+use Netzmacht\ReleaseNotifier\Publisher\PublisherFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

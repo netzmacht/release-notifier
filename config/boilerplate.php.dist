@@ -12,9 +12,9 @@
 
 declare(strict_types=1);
 
-use App\Package\Release;
-use App\Publisher\Tapatalk\PostPublisher;
-use App\Publisher\Tapatalk\TopicPublisher;
+use Netzmacht\ReleaseNotifier\Package\Release;
+use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\PostPublisher;
+use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\TopicPublisher;
 
 return [
     'publishers' => [

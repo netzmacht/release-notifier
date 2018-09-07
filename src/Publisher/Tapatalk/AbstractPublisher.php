@@ -12,11 +12,11 @@
 
 declare(strict_types=1);
 
-namespace App\Publisher\Tapatalk;
+namespace Netzmacht\ReleaseNotifier\Publisher\Tapatalk;
 
-use App\Publisher\Publisher;
-use App\Package\Release;
-use App\Publisher\Tapatalk\Renderer\Renderer;
+use Netzmacht\ReleaseNotifier\Publisher\Publisher;
+use Netzmacht\ReleaseNotifier\Package\Release;
+use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\Renderer\Renderer;
 use Netzmacht\Tapatalk\Client;
 
 /**

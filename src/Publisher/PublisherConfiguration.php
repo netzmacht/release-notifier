@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace App\Publisher;
+namespace Netzmacht\ReleaseNotifier\Publisher;
 
 /**
  * Interface PackageConfiguration

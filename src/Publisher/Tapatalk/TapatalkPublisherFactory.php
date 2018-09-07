@@ -10,20 +10,18 @@
  * @filesource
  */
 
-namespace App\Publisher\Tapatalk;
+namespace Netzmacht\ReleaseNotifier\Publisher\Tapatalk;
 
-use App\Publisher\PublisherConfiguration;
-use App\Publisher\Publisher;
-use App\Publisher\PublisherFactory;
-use App\Publisher\Tapatalk\Renderer\CallbackRenderer;
-use App\Publisher\Tapatalk\Renderer\Renderer;
+use Netzmacht\ReleaseNotifier\Publisher\PublisherConfiguration;
+use Netzmacht\ReleaseNotifier\Publisher\Publisher;
+use Netzmacht\ReleaseNotifier\Publisher\PublisherFactory;
+use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\Renderer\CallbackRenderer;
+use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\Renderer\Renderer;
 use Netzmacht\Tapatalk\Client as TapatalkApiClient;
 use Netzmacht\Tapatalk\Factory;
 
 /**
  * Class PublisherFactory
- *
- * @package App\Publisher
  */
 final class TapatalkPublisherFactory implements PublisherFactory
 {
