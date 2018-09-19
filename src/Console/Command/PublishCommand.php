@@ -83,7 +83,7 @@ final class PublishCommand extends AbstractConfigBasedCommand
         $total      = 0;
 
         foreach ($config['packages'] as $package) {
-            $lastRun  = $history->get($configFile, $package['package']);
+            $lastRun  = $history->get($package['package']);
             $since    = $this->getSince($input, $lastRun);
             $releases = $this->packageReleases->since($package['package'], $since);
 
