@@ -63,4 +63,7 @@ return [
             ],
         ],
     ],
+
+    // Define a wait interval in seconds between each publish action. Useful to cope with API limits
+    'wait' => 0
 ];
