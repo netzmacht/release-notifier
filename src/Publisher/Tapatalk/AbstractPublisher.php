@@ -115,10 +115,18 @@ abstract class AbstractPublisher implements Publisher
     public function publish(Release $release): int
     {
         $configuration = null;
+        $options       = [];
 
         foreach ($this->configuration as $package) {
             if ($package['package'] === $release->name() && isset($package['publishers'][$this->name])) {
                 $configuration = $package['publishers'][$this->name];
+
+                if (!empty($configuration['options'])) {
+                    $options = $configuration['options'];
+                } elseif (!empty($package['options'])) {
+                    $options = $package['options'];
+                }
+
                 break;
             }
         }
@@ -129,8 +137,8 @@ abstract class AbstractPublisher implements Publisher
             );
         }
 
-        $subject = $this->renderer->renderSubject($release);
-        $body    = $this->renderer->renderBody($release);
+        $subject = $this->renderer->renderSubject($release, $options);
+        $body    = $this->renderer->renderBody($release, $options);
 
         $this->createEntry($this->client, $configuration, $subject, $body);
 

@@ -25,17 +25,19 @@ interface Renderer
      * Render the subject.
      *
      * @param Release $release The release.
+     * @param array   $options Rendering options.
      *
      * @return string
      */
-    public function renderSubject(Release $release): ?string;
+    public function renderSubject(Release $release, array $options = []): ?string;
 
     /**
      * Render the body.
      *
      * @param Release $release The release.
+     * @param array   $options Rendering options.
      *
      * @return string
      */
-    public function renderBody(Release $release): string;
+    public function renderBody(Release $release, array $options = []): string;
 }

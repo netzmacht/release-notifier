@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Ability to define a wait interval between each publish action
+- Add ability to define a wait interval between each publish action
+- Add options to the configuration which are passed to the renderer
 
 ## 0.3.2 - 2018-11-01
 

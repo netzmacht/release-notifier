@@ -50,16 +50,16 @@ final class CallbackRenderer implements Renderer
     /**
      * {@inheritdoc}
      */
-    public function renderSubject(Release $release): string
+    public function renderSubject(Release $release, array $options = []): string
     {
-        return (string) ($this->subjectRenderer)($release);
+        return (string) ($this->subjectRenderer)($release, $options);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function renderBody(Release $release): string
+    public function renderBody(Release $release, array $options = []): string
     {
-        return (string) ($this->bodyRenderer)($release);
+        return (string) ($this->bodyRenderer)($release, $options);
     }
 }
