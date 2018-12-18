@@ -21,7 +21,7 @@ return (function () {
     return [
         'application' => [
             'name' => 'release-notifier',
-            'version' => '0.3.0',
+            'version' => '0.3.1',
             'commands' => [
                 CreateConfigCommand::class,
                 CheckCommand::class,

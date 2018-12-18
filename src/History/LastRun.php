@@ -141,7 +141,7 @@ final class LastRun
     {
         return [
             'lastRun'      => $this->lastRun->format(DATE_ATOM),
-            'lastModified' => $this->lastRun->format(DATE_ATOM),
+            'lastModified' => $this->lastModified->format(DATE_ATOM),
         ];
     }
 }

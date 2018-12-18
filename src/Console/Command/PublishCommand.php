@@ -95,7 +95,7 @@ final class PublishCommand extends AbstractConfigBasedCommand
         $wait       = $input->getOption('wait') ?: $config['wait'];
 
         foreach ($config['packages'] as $package) {
-            $lastRun  = $history->get($configFile, $package['package']);
+            $lastRun  = $history->get($package['package']);
             $since    = $this->getSince($input, $lastRun);
             $releases = $this->packageReleases->since($package['package'], $since);
 
