@@ -89,6 +89,7 @@ return [
                 'forum-de' => [
                     'forumId'   => 123,
                     'topicId'   => 456, // Only required for the PostPublisher
+                    'sticky'    => false // Mark new topics sticky. Only recognized for the TopicPublisher
                     'options' => [], // Options being passed to your renderer. Define any if you want.
                 ],
                 'twitter' => [
