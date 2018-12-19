@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add ability to define a wait interval between each publish action
 - Add options to the configuration which are passed to the renderer
 - Add twitter publisher
+- Add ability to mark new topics as sticky
 
 ## 0.3.2 - 2018-11-01
 
