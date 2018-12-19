@@ -16,6 +16,7 @@ use Netzmacht\ReleaseNotifier\Console\Command\CreateConfigCommand;
 use Netzmacht\ReleaseNotifier\Console\Command\PublishCommand;
 use Netzmacht\ReleaseNotifier\Publisher\NoOpPublisherFactory;
 use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\TapatalkPublisherFactory;
+use Netzmacht\ReleaseNotifier\Publisher\Twitter\TwitterPublisherFactory;
 
 return (function () {
     return [
@@ -35,6 +36,7 @@ return (function () {
         'publishers' => [
             'factories' => [
                 TapatalkPublisherFactory::class,
+                TwitterPublisherFactory::class,
                 NoOpPublisherFactory::class
             ]
         ],

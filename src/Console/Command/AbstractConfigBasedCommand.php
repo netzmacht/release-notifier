@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Webmozart\PathUtil\Path;
+use function array_key_exists;
 
 /**
  * Class AbstractCommand
@@ -95,6 +96,12 @@ abstract class AbstractConfigBasedCommand extends Command
 
         Assert::that($config['publishers'])->isArray();
         Assert::that($config['packages'])->isArray();
+
+        if (array_key_exists('wait', $config)) {
+            Assert::that($config['wait'])->nullOr()->integer();
+        } else {
+            $config['wait'] = null;
+        }
 
         return $config;
     }

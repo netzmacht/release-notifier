@@ -50,6 +50,10 @@ adjust the executable path.
 The tool used the *symfony/console*. You might use the `list` command or `--help` option to get more information about
 the provides commands.
 
+### Twitter
+
+If you want to use the twitter publisher, you have to register an own twitter app and generate the access token online
+at developer.twitter.com
 
 Migrate from netzmacht/packagist-release-publisher
 --------------------------------------------------

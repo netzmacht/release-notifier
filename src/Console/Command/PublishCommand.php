@@ -22,7 +22,10 @@ use Netzmacht\ReleaseNotifier\Publisher\Publisher;
 use Netzmacht\ReleaseNotifier\Publisher\PublisherConfiguration;
 use Netzmacht\ReleaseNotifier\Publisher\PublisherFactory;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function sleep;
+use function sprintf;
 
 /**
  * Class PublishReleaseNoteCommand
@@ -69,6 +72,14 @@ final class PublishCommand extends AbstractConfigBasedCommand
         parent::configure();
 
         $this->setDescription('Publish new released packages based on a configuration file');
+
+        $this->addOption(
+            'wait',
+            'w',
+            InputOption::VALUE_REQUIRED,
+            'Define a wait interval in seconds between each publishing. Maybe necessary if publishing limit is set.',
+            null
+        );
     }
 
     /**
@@ -81,6 +92,7 @@ final class PublishCommand extends AbstractConfigBasedCommand
         $history    = $this->history->get($configFile);
         $publisher  = $this->createPublisher($config);
         $total      = 0;
+        $wait       = $input->getOption('wait') ?: $config['wait'];
 
         foreach ($config['packages'] as $package) {
             $lastRun  = $history->get($package['package']);
@@ -99,11 +111,17 @@ final class PublishCommand extends AbstractConfigBasedCommand
                 )
             );
 
-            foreach ($releases as $release) {
+            foreach ($releases as $index => $release) {
                 $count = $publisher->publish($release);
+                $output->write(' - ');
+
+                if ($wait && $index > 0) {
+                    $output->write(sprintf(' (Wait %s seconds)', $wait));
+                    sleep($wait);
+                }
 
                 $output->writeln(
-                    sprintf(' - %s release published %s times', $release->version(), $count),
+                    sprintf('%s release published %s times', $release->version(), $count),
                     OutputInterface::VERBOSITY_VERBOSE
                 );
             }
