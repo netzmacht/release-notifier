@@ -70,7 +70,7 @@ final class StatusPublisher extends AbstractPublisher
         Assert::that($status)->keyExists('status');
         Assert::that($status['status'])->string();
 
-        $this->connection->post('status/update', $status);
+        $this->connection->post('statuses/update', $status);
 
         return 1;
     }
