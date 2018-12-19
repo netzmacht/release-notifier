@@ -15,19 +15,15 @@ declare(strict_types=1);
 namespace Netzmacht\ReleaseNotifier\Publisher\Twitter;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Assert\Assert;
 use Netzmacht\ReleaseNotifier\Package\Release;
-use Netzmacht\ReleaseNotifier\Publisher\Publisher;
-use function sprintf;
+use Netzmacht\ReleaseNotifier\Publisher\AbstractPublisher;
 
-final class StatusPublisher implements Publisher
+/**
+ * Class StatusPublisher publishes a twitter status.
+ */
+final class StatusPublisher extends AbstractPublisher
 {
-    /**
-     * Name of the publisher. Used to match against packages.
-     *
-     * @var string
-     */
-    private $name;
-
     /**
      * Twitter connection.
      *
@@ -36,73 +32,43 @@ final class StatusPublisher implements Publisher
     private $connection;
 
     /**
-     * Package configuration.
+     * Twitter status renderer.
      *
-     * @var array
+     * @var Renderer
      */
-    private $configuration;
-
-    /**
-     * Condition which checks if package should be published.
-     *
-     * @var callable|null
-     */
-    private $condition;
+    private $renderer;
 
     /**
      * StatusPublisher constructor.
      *
      * @param string        $name          Name of the publisher. Used to match against packages.
      * @param TwitterOAuth  $connection    Twitter connection.
+     * @param Renderer      $renderer      Twitter status renderer.
      * @param array         $configuration Package configuration.
      * @param callable|null $condition     Condition which checks if package should be published.
      */
     public function __construct(
         string $name,
         TwitterOAuth $connection,
+        Renderer $renderer,
         array $configuration,
         ?callable $condition = null
     ) {
-        $this->name          = $name;
-        $this->connection    = $connection;
-        $this->configuration = $configuration;
-        $this->condition     = $condition;
+        parent::__construct($name, $configuration, $condition);
 
+        $this->connection = $connection;
+        $this->renderer   = $renderer;
     }
 
-    public function supports(Release $release): bool
-    {
-        $found = false;
-
-        foreach ($this->configuration as $package) {
-            if ($package['package'] === $release->name()) {
-                $found = isset($package['publishers'][$this->name]);
-                break;
-            }
-        }
-
-        if (!$found) {
-            return false;
-        }
-
-        if ($this->condition) {
-            return ($this->condition)($release);
-        }
-
-        return true;
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function publish(Release $release): int
     {
-        // TODO: Use a renderer
-        $status = [
-            'status' => sprintf(
-                '%s %s got released. %s',
-                $release->name(),
-                $release->version()->__toString(),
-                $release->link()
-            ),
-        ];
+        $status = $this->renderer->renderStatus($release, $this->connection, $this->renderOptions($release));
+
+        Assert::that($status)->keyExists('status');
+        Assert::that($status['status'])->string();
 
         $this->connection->post('status/update', $status);
 

@@ -12,9 +12,12 @@
 
 declare(strict_types=1);
 
+use Abraham\TwitterOAuth\TwitterOAuth;
 use Netzmacht\ReleaseNotifier\Package\Release;
 use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\PostPublisher;
 use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\TopicPublisher;
+use Netzmacht\ReleaseNotifier\Publisher\Twitter\Renderer as TwitterStatusRenderer;
+use Netzmacht\ReleaseNotifier\Publisher\Twitter\StatusPublisher;
 
 return [
     'publishers' => [
@@ -47,7 +50,34 @@ return [
                         );
                     }
                 ]
-            ]
+            ],
+        ],
+        [
+            'name'   => 'twitter',
+            'type'   => StatusPublisher::class,
+            'config' => [
+                // Create a new app on developer.twitter.com and take the consumer key and secret
+                // Also generate access tokens and access tokens secret for your app there
+                'consumer_key' => '',
+                'consumer_secret' => '',
+                'access_token' => '',
+                'access_token_secret' => '',
+                'renderer' => new class implements TwitterStatusRenderer {
+                    public function renderStatus(Release $release, TwitterOAuth $connection, array $options = []): array {
+                        return [
+                            'status' => trim(
+                                sprintf(
+                                    'Just released %s %s. %s %s',
+                                    $release->name(),
+                                    $release->version(),
+                                    $release->link(),
+                                    $options['hashtags'] ?? ''
+                                )
+                            ),
+                        ];
+                    }
+                }
+            ],
         ],
     ],
 
@@ -60,6 +90,9 @@ return [
                     'forumId'   => 123,
                     'topicId'   => 456, // Only required for the PostPublisher
                     'options' => [], // Options being passed to your renderer. Define any if you want.
+                ],
+                'twitter' => [
+                    'hashtags' => '#foo #bar'
                 ]
             ],
             'options' => [], // Options being passed to your renderer if no options for the publisher itself are defined

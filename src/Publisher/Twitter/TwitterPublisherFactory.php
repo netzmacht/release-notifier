@@ -25,18 +25,40 @@ use Netzmacht\ReleaseNotifier\Publisher\PublisherFactory;
  */
 final class TwitterPublisherFactory implements PublisherFactory
 {
+    /**
+     * {@inheritdoc}
+     */
     public function supports(string $type): bool
     {
         return $type === StatusPublisher::class;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function create(PublisherConfiguration $configuration, array $packages): Publisher
     {
         $connection = $this->createConnection($configuration);
+        $renderer   = $configuration->config('renderer');
 
-        return new StatusPublisher($configuration->name(), $connection, $packages, $configuration->condition());
+        Assert::that($renderer)->isInstanceOf(Renderer::class);
+
+        return new StatusPublisher(
+            $configuration->name(),
+            $connection,
+            $renderer,
+            $packages,
+            $configuration->condition()
+        );
     }
 
+    /**
+     * Create twitter API connection.
+     *
+     * @param PublisherConfiguration $configuration Publisher configuration.
+     *
+     * @return TwitterOAuth
+     */
     private function createConnection(PublisherConfiguration $configuration): TwitterOAuth
     {
         $consumerKey       = $configuration->config('consumer_key');

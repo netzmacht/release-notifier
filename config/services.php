@@ -23,6 +23,7 @@ use Netzmacht\ReleaseNotifier\Publisher\DelegatingPublisherFactory;
 use Netzmacht\ReleaseNotifier\Publisher\NoOpPublisherFactory;
 use Netzmacht\ReleaseNotifier\Publisher\PublisherFactory;
 use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\TapatalkPublisherFactory;
+use Netzmacht\ReleaseNotifier\Publisher\Twitter\TwitterPublisherFactory;
 use Netzmacht\ReleaseNotifier\Rss\Http\GuzzleClientAdapter;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
@@ -34,7 +35,8 @@ return [
     'invokables' => [
         Filesystem::class               => Filesystem::class,
         TapatalkPublisherFactory::class => TapatalkPublisherFactory::class,
-        NoOpPublisherFactory::class     => NoOpPublisherFactory::class
+        NoOpPublisherFactory::class     => NoOpPublisherFactory::class,
+        TwitterPublisherFactory::class  => TwitterPublisherFactory::class,
     ],
     'factories'  => [
         /* Application config */
@@ -112,6 +114,6 @@ return [
         /* Last run information */
         History::class              => function (ContainerInterface $container): History {
             return new History($container->get(Filesystem::class));
-        }
+        },
     ],
 ];
