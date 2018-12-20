@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Netzmacht\ReleaseNotifier\Publisher\Tapatalk;
 
-use Netzmacht\ReleaseNotifier\Publisher\Publisher;
+use Netzmacht\ReleaseNotifier\Publisher\AbstractPublisher as BaseAbstractPublisher;
 use Netzmacht\ReleaseNotifier\Package\Release;
 use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\Renderer\Renderer;
 use Netzmacht\Tapatalk\Client;
@@ -22,15 +22,8 @@ use Netzmacht\Tapatalk\Client;
 /**
  * Class AbstractPublisher
  */
-abstract class AbstractPublisher implements Publisher
+abstract class AbstractPublisher extends BaseAbstractPublisher
 {
-    /**
-     * Name of the publisher. Used to match against packages.
-     *
-     * @var string
-     */
-    private $name;
-
     /**
      * Tapatalk client.
      *
@@ -39,25 +32,11 @@ abstract class AbstractPublisher implements Publisher
     protected $client;
 
     /**
-     * Package configuration.
-     *
-     * @var array
-     */
-    private $configuration;
-
-    /**
      * Release renderer.
      *
      * @var Renderer
      */
     private $renderer;
-
-    /**
-     * Condition which checks if package should be published.
-     *
-     * @var callable|null
-     */
-    private $condition;
 
     /**
      * PostPublisher constructor.
@@ -75,36 +54,10 @@ abstract class AbstractPublisher implements Publisher
         array $packageConfiguration,
         ?callable $condition = null
     ) {
-        $this->name          = $name;
-        $this->client        = $tapatalk;
-        $this->configuration = $packageConfiguration;
-        $this->renderer      = $renderer;
-        $this->condition     = $condition;
-    }
+        parent::__construct($name, $packageConfiguration, $condition);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function supports(Release $release): bool
-    {
-        $found = false;
-
-        foreach ($this->configuration as $package) {
-            if ($package['package'] === $release->name()) {
-                $found = isset($package['publishers'][$this->name]);
-                break;
-            }
-        }
-
-        if (!$found) {
-            return false;
-        }
-
-        if ($this->condition) {
-            return ($this->condition)($release);
-        }
-
-        return true;
+        $this->client   = $tapatalk;
+        $this->renderer = $renderer;
     }
 
     /**
@@ -114,29 +67,14 @@ abstract class AbstractPublisher implements Publisher
      */
     public function publish(Release $release): int
     {
-        $configuration = null;
-        $options       = [];
-
-        foreach ($this->configuration as $package) {
-            if ($package['package'] === $release->name() && isset($package['publishers'][$this->name])) {
-                $configuration = $package['publishers'][$this->name];
-
-                if (!empty($configuration['options'])) {
-                    $options = $configuration['options'];
-                } elseif (!empty($package['options'])) {
-                    $options = $package['options'];
-                }
-
-                break;
-            }
-        }
-
+        $configuration = $this->packageConfiguration($release);
         if (!$configuration) {
             throw new \RuntimeException(
                 sprintf('Package %s is not configured for renderer "%s".', $release->name(), self::class)
             );
         }
 
+        $options = $this->renderOptions($release);
         $subject = $this->renderer->renderSubject($release, $options);
         $body    = $this->renderer->renderBody($release, $options);
 
