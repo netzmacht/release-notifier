@@ -3,13 +3,12 @@ Release notifier
 
 This tool allows to notify about releases published on packagist to a broader audience. 
 
-There are multiple channels to share the release information planned. At the moment only tapatalk is supported.
+You can publish the release information as twitter tweet and as a forum post/topic of a forum using tapatalk.
 
 Requirements
 ------------
 
- - PHP 7.1
-
+ - \>= PHP 7.1
 
 Install
 -------
@@ -53,12 +52,4 @@ the provides commands.
 ### Twitter
 
 If you want to use the twitter publisher, you have to register an own twitter app and generate the access token online
-at developer.twitter.com
-
-Migrate from netzmacht/packagist-release-publisher
---------------------------------------------------
-
-The tool was previously named "netzmacht/packagist-release-publisher". To migrate 
-
- 1. Replace namespaces beginning with "App\" with "Netzmacht\ReleaseNotifier\" in your config file.
- 2. Be aware that last run information has changed and are not migrated.
+at [developer.twitter.com](https://developer.twitter.com)

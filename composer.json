@@ -1,6 +1,7 @@
 {
     "name": "netzmacht/release-notifier",
     "description": "Ths package provides a CLI tool to create release notes of packagist releases.",
+    "keywords": ["release", "notification", "twitter", "tapatalk", "forum"],
     "type": "library",
     "require": {
         "php": "~7.1",
