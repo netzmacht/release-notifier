@@ -18,6 +18,9 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 use Assert\Assert;
 use Netzmacht\ReleaseNotifier\Package\Release;
 use Netzmacht\ReleaseNotifier\Publisher\AbstractPublisher;
+use Netzmacht\ReleaseNotifier\Publisher\ConnectionState;
+use function array_map;
+use function implode;
 
 /**
  * Class StatusPublisher publishes a twitter status.
@@ -73,5 +76,36 @@ final class StatusPublisher extends AbstractPublisher
         $this->connection->post('statuses/update', $status);
 
         return 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function connect(): array
+    {
+        $content = $this->connection->get('account/verify_credentials');
+
+        if (isset($content->errors)) {
+            $errorMessage = implode(
+                ' ',
+                array_map(
+                    function ($error) {
+                        return $error->message;
+                    },
+                    $content->errors
+                )
+            );
+            return [ConnectionState::failed($this->name(), $errorMessage)];
+        }
+
+        return [
+            ConnectionState::connected(
+                $this->name(),
+                [
+                    'name' => $content->name,
+                    'screen_name' => $content->screen_name
+                ]
+            )
+        ];
     }
 }

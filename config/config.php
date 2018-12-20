@@ -12,6 +12,7 @@
 
 use Netzmacht\ReleaseNotifier\Console\Command\CheckCommand;
 use Netzmacht\ReleaseNotifier\Console\Command\CheckPackageCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\ConnectionStateCommand;
 use Netzmacht\ReleaseNotifier\Console\Command\CreateConfigCommand;
 use Netzmacht\ReleaseNotifier\Console\Command\PublishCommand;
 use Netzmacht\ReleaseNotifier\Publisher\NoOpPublisherFactory;
@@ -27,6 +28,7 @@ return (function () {
                 CreateConfigCommand::class,
                 CheckCommand::class,
                 CheckPackageCommand::class,
+                ConnectionStateCommand::class,
                 PublishCommand::class,
             ]
         ],

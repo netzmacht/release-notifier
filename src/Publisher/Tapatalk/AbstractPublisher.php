@@ -16,6 +16,7 @@ namespace Netzmacht\ReleaseNotifier\Publisher\Tapatalk;
 
 use Netzmacht\ReleaseNotifier\Publisher\AbstractPublisher as BaseAbstractPublisher;
 use Netzmacht\ReleaseNotifier\Package\Release;
+use Netzmacht\ReleaseNotifier\Publisher\ConnectionState;
 use Netzmacht\ReleaseNotifier\Publisher\Tapatalk\Renderer\Renderer;
 use Netzmacht\Tapatalk\Client;
 
@@ -81,6 +82,26 @@ abstract class AbstractPublisher extends BaseAbstractPublisher
         $this->createEntry($this->client, $configuration, $subject, $body);
 
         return 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function connect(): array
+    {
+        $config  = $this->client->config();
+        $account = $this->client->account();
+
+        return [
+            ConnectionState::connected(
+                $this->name(),
+                [
+                    'tapatalk_version' => $config->getTapatalkVersion(),
+                    'username'         => $account->getUsername(),
+                    'user_type'        => $account->getType(),
+                ]
+            ),
+        ];
     }
 
     /**

@@ -36,4 +36,12 @@ final class NoOpPublisher implements Publisher
     {
         return 1;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function connect(): array
+    {
+        return [];
+    }
 }

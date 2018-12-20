@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1fd92d54f6d6551e6a0c278b971dfd0",
+    "content-hash": "c0031e70e8dbc4817bb4d158d2306b61",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -519,16 +519,16 @@
         },
         {
             "name": "netzmacht/tapatalk-client-api",
-            "version": "0.3.0",
+            "version": "0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/netzmacht/tapatalk-client-api.git",
-                "reference": "11ce0c15b5a98391b048fba4d340bbba3517e56b"
+                "reference": "5495a3239cdabebcfd8277b3da8a8849ab13a119"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/netzmacht/tapatalk-client-api/zipball/11ce0c15b5a98391b048fba4d340bbba3517e56b",
-                "reference": "11ce0c15b5a98391b048fba4d340bbba3517e56b",
+                "url": "https://api.github.com/repos/netzmacht/tapatalk-client-api/zipball/5495a3239cdabebcfd8277b3da8a8849ab13a119",
+                "reference": "5495a3239cdabebcfd8277b3da8a8849ab13a119",
                 "shasum": ""
             },
             "require": {
@@ -552,7 +552,7 @@
                 "MIT"
             ],
             "description": "Tapatalk client library",
-            "time": "2018-12-19T10:10:05+00:00"
+            "time": "2018-12-20T09:52:10+00:00"
         },
         {
             "name": "php-http/discovery",

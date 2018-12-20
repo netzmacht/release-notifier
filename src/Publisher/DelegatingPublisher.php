@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Netzmacht\ReleaseNotifier\Publisher;
 
+use function array_map;
 use Netzmacht\ReleaseNotifier\Package\Release;
 
 /**
@@ -66,5 +67,20 @@ final class DelegatingPublisher implements Publisher
         }
 
         return $count;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function connect(): array
+    {
+        return array_merge(
+            ...array_map(
+                function (Publisher $publisher) {
+                    return $publisher->connect();
+                },
+                $this->publisher
+            )
+        );
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 use Netzmacht\ReleaseNotifier\Console\Command\CheckCommand;
 use Netzmacht\ReleaseNotifier\Console\Command\CheckPackageCommand;
+use Netzmacht\ReleaseNotifier\Console\Command\ConnectionStateCommand;
 use Netzmacht\ReleaseNotifier\Console\Command\CreateConfigCommand;
 use Netzmacht\ReleaseNotifier\Console\Command\PublishCommand;
 use Netzmacht\ReleaseNotifier\History\History;
@@ -74,6 +75,13 @@ return [
         CheckPackageCommand::class => function (ContainerInterface $container): CheckPackageCommand {
             return new CheckPackageCommand(
                 $container->get(Releases::class)
+            );
+        },
+
+        ConnectionStateCommand::class => function (ContainerInterface $container): ConnectionStateCommand {
+            return new ConnectionStateCommand(
+                $container->get(PublisherFactory::class),
+                $container->get(History::class)
             );
         },
 

@@ -38,4 +38,11 @@ interface Publisher
      * @return int
      */
     public function publish(Release $release): int;
+
+    /**
+     * Connect to APIs and return list of ConnectionState.
+     *
+     * @return array|ConnectionState[]
+     */
+    public function connect(): array;
 }
