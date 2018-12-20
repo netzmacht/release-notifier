@@ -58,7 +58,7 @@ final class CreateConfigCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create base structure of the config file');
 
@@ -81,7 +81,7 @@ final class CreateConfigCommand extends Command
      *
      * @throws \RuntimeException If config file already exists and force option is not set.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $configFile = $this->getConfigFileArgument($input);
         $force      = $input->getOption('force');

@@ -48,7 +48,7 @@ final class CheckPackageCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Check if an arbitrary package has new releases');
 
@@ -68,7 +68,7 @@ final class CheckPackageCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $package  = $input->getArgument('package');
         $since    = $this->getSince($input);

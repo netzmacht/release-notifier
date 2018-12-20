@@ -67,7 +67,7 @@ final class PublishCommand extends AbstractConfigBasedCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -85,7 +85,7 @@ final class PublishCommand extends AbstractConfigBasedCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $configFile = $this->getConfigFileArgument($input);
         $config     = $this->loadConfig($input);

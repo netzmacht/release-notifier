@@ -52,7 +52,7 @@ abstract class AbstractConfigBasedCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument(
             'config',

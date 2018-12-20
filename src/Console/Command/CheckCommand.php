@@ -47,7 +47,7 @@ final class CheckCommand extends AbstractConfigBasedCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -57,7 +57,7 @@ final class CheckCommand extends AbstractConfigBasedCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $config     = $this->loadConfig($input);
         $configFile = $this->getConfigFileArgument($input);
