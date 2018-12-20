@@ -113,10 +113,10 @@ final class PublishCommand extends AbstractConfigBasedCommand
 
             foreach ($releases as $index => $release) {
                 $count = $publisher->publish($release);
-                $output->write(' - ');
+                $output->write(' - ', OutputInterface::VERBOSITY_VERBOSE);
 
                 if ($wait && $index > 0) {
-                    $output->write(sprintf(' (Wait %s seconds)', $wait));
+                    $output->write(sprintf(' (Wait %s seconds)', $wait), OutputInterface::VERBOSITY_VERBOSE);
                     sleep($wait);
                 }
 
