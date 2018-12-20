@@ -9,7 +9,7 @@
         "ext-json": "*",
         "guzzlehttp/psr7": "^1.4",
         "guzzlehttp/guzzle": "^6.3",
-        "netzmacht/tapatalk-client-api": "^0.3.0",
+        "netzmacht/tapatalk-client-api": "^0.3.1",
         "symfony/console": "^4.1",
         "symfony/filesystem": "^4.1",
         "zendframework/zend-feed": "^2.10",
