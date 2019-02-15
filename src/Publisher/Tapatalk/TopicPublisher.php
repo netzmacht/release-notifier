@@ -5,7 +5,7 @@
  *
  * @package    release-notifier
  * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus
+ * @copyright  2018-2019 netzmacht David Molineus
  * @license    LGPL-3.0-or-later https://github.com/netzmacht/release-notifier/blob/master/LICENSE
  * @filesource
  */
@@ -31,10 +31,15 @@ final class TopicPublisher extends AbstractPublisher
         string $body
     ): void {
         $result = $client->topics()->createNewTopic($configuration['forumId'], $subject, $body);
-        $sticky = ($configuration['sticky'] ?? false);
+        $sticky = $configuration['sticky'] ?? false;
+        $close = $configuration['close'] ?? false;
 
         if ($sticky) {
             $client->moderation()->stickTopic((string) $result['topicId']);
+        }
+
+        if ($close) {
+            $client->moderation()->closeTopic((string) $result['topicId']);
         }
     }
 }
