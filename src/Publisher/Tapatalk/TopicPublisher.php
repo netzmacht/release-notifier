@@ -33,7 +33,7 @@ final class TopicPublisher extends AbstractPublisher
     ): void {
         $result = $client->topics()->createNewTopic($configuration['forumId'], $subject, $body);
         $sticky = ($configuration['sticky'] ?? false);
-        $close = ($configuration['close'] ?? false);
+        $close  = ($configuration['close'] ?? false);
 
         if ($sticky) {
             $client->moderation()->stickTopic((string) $result['topicId']);
