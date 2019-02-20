@@ -4,18 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.4.0 - TBD
+## 0.4.0 - 2019-02-20
 
-[Full Changelog](https://github.com/netzmacht/release-notifier/compare/0.4.0-rc2...master)
+[Full Changelog](https://github.com/netzmacht/release-notifier/compare/0.4.0-rc2...0.4.0)
 
-- Add connection-state command to check 3rd party api connection states.``
-
-## 0.4.0-rc3 - 2019-xx-xx
-
-[Full Changelog](https://github.com/netzmacht/release-notifier/compare/0.4.0-rc2...0.4.0-rc3)
-
-### Added
-
+- Add connection-state command to check 3rd party api connection states
 - Add ability to close new topics
 
 ## 0.4.0-rc2 - 2018-12-19
