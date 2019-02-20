@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add connection-state command to check 3rd party api connection states.``
 
+## 0.4.0-rc3 - 2019-xx-xx
+
+[Full Changelog](https://github.com/netzmacht/release-notifier/compare/0.4.0-rc2...0.4.0-rc3)
+
+### Added
+
+- Add ability to close new topics
+
 ## 0.4.0-rc2 - 2018-12-19
 
 [Full Changelog](https://github.com/netzmacht/release-notifier/compare/0.4.0-rc1...0.4.0-rc2)
