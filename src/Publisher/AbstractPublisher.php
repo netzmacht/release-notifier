@@ -104,6 +104,23 @@ abstract class AbstractPublisher implements Publisher
     }
 
     /**
+     * Get the publisher configuration.
+     *
+     * @param Release $release Package release.
+     *
+     * @return array|null
+     */
+    protected function publisherConfiguration(Release $release): ?array
+    {
+        $configuration = $this->packageConfiguration($release);
+        if ($configuration === null) {
+            return null;
+        }
+
+        return $configuration['publishers'][$this->name];
+    }
+
+    /**
      * Get the render options from the package configuration.
      *
      * @param Release $release Package release.

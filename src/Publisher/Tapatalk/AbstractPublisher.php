@@ -68,10 +68,10 @@ abstract class AbstractPublisher extends BaseAbstractPublisher
      */
     public function publish(Release $release): int
     {
-        $configuration = $this->packageConfiguration($release);
+        $configuration = $this->publisherConfiguration($release);
         if (!$configuration) {
             throw new \RuntimeException(
-                sprintf('Package %s is not configured for renderer "%s".', $release->name(), self::class)
+                sprintf('Package %s is not configured for publisher "%s".', $release->name(), self::class)
             );
         }
 
