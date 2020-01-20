@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace Netzmacht\ReleaseNotifier\Package;
 
+use Composer\Semver\Comparator;
 use Composer\Semver\Semver;
 use Zend\Feed\Reader\Feed\FeedInterface;
 use Zend\Feed\Reader\Http\ClientInterface;
 use Zend\Feed\Reader\Reader;
+use function usort;
 
 /**
  * Class PackageReleases
@@ -72,6 +74,10 @@ final class PackagistReleases implements Releases
                 $previousMap[$version]
             );
         }
+
+        usort($releases, static function (Release $releaseA, Release $releaseB) {
+            return Comparator::lessThan($releaseA, $releaseB);
+        });
 
         return new ReleaseIterator(
             $releases,
